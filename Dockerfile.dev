@@ -1,0 +1,10 @@
+FROM ruby:3.3.0-alpine
+
+WORKDIR /usr/app
+
+COPY Gemfile* ./
+
+RUN apk update && apk add --no-cache build-base ruby-dev postgresql-dev postgresql-client
+RUN bundle install
+
+COPY . .
