@@ -1,6 +1,7 @@
 APP_ENV := development
 DB_NAME := challenge_be_safebox_api_rails_$(APP_ENV)
 DB_USER := postgres
+TEST_PATH := spec
 
 db-connect:
 	@docker compose exec db psql -U $(DB_USER) -d $(DB_NAME)
@@ -32,6 +33,9 @@ install:
 
 console:
 	@docker compose exec app rails console
+
+test:
+	@docker compose exec app rspec ${TEST_PATH}
 
 lint:
 	@docker compose exec app rubocop
