@@ -33,5 +33,8 @@ install:
 console:
 	@docker compose exec app rails console
 
+lint:
+	@docker compose exec app rubocop
+
 logs:
 	@docker compose logs $(SERVICE) -f
