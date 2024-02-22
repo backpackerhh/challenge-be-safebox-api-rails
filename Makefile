@@ -42,3 +42,8 @@ lint:
 
 logs:
 	@docker compose logs $(SERVICE) -f
+
+# Do not run from integrated terminal in VSCodium
+# control + p, control + q for ending the debugging session
+debug:
+	@docker attach $$(docker compose ps -q app)

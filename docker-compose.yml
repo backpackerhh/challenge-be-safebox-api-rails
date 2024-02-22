@@ -15,6 +15,7 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     stdin_open: true
+    tty: true
     volumes:
       - .:/usr/app
     depends_on:
