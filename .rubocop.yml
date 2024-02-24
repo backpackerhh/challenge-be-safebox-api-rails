@@ -3,6 +3,9 @@ require:
   - rubocop-rails
   - rubocop-rspec
 
+inherit_gem:
+  rswag-specs: .rubocop_rspec_alias_config.yml
+
 AllCops:
   SuggestExtensions: false
   NewCops: enable

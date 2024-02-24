@@ -1,0 +1,18 @@
+---
+openapi: 3.0.1
+info:
+  description: SafeIsh API - The most secure safebox
+  version: 1.0.0
+  title: SafeIsh API
+paths: {}
+components:
+  securitySchemes:
+    bearerToken:
+      type: http
+      scheme: bearer
+  schemas: {}
+servers:
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: www.example.com

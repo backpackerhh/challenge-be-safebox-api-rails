@@ -37,6 +37,9 @@ console:
 test:
 	@docker compose exec app rspec ${TEST_PATH}
 
+test-api:
+	@docker compose exec app rails rswag
+
 lint:
 	@docker compose exec app rubocop
 
