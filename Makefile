@@ -15,6 +15,10 @@ db-migrate:
 db-generate-migration:
 	@docker compose exec app rails g migration $(NAME)
 
+restart-server:
+	@docker compose down app
+	@docker compose up app -d
+
 start:
 	@docker compose up --build -d $(SERVICES)
 
