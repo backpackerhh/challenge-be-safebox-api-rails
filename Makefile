@@ -38,11 +38,14 @@ install:
 console:
 	@docker compose exec app rails console
 
+routes:
+	@docker compose exec app rails routes
+
 test:
 	@docker compose exec app rspec ${TEST_PATH}
 
 test-api:
-	@docker compose exec app rails rswag
+	@docker compose exec app rails rswag PATTERN="spec/apps/**/*_request_spec.rb" SWAGGER_DRY_RUN=0
 
 lint:
 	@docker compose exec app rubocop

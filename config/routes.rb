@@ -12,4 +12,10 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  scope :api do
+    scope :v1 do
+      post "safeboxes", to: "safeboxes/api/v1/create_safebox#create"
+    end
+  end
 end

@@ -18,3 +18,10 @@ Style/StringLiterals:
 
 Style/Documentation:
   Enabled: false
+
+# Tests
+
+RSpec/NestedGroups:
+  Enabled: true
+  Exclude:
+    - "spec/apps/**/*_request_spec.rb"

@@ -26,6 +26,9 @@ module SafeIsh
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
+    # Load the bounded contexts defined within this application and the code that will use it
+    config.autoload_paths += %W[#{config.root}/apps #{config.root}/contexts]
+
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.

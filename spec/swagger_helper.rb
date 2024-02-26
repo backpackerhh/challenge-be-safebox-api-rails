@@ -33,7 +33,53 @@ RSpec.configure do |config|
             scheme: :bearer
           }
         },
-        schemas: {}
+        schemas: {
+          new_safebox: {
+            type: :object,
+            properties: {
+              data: {
+                type: :object,
+                properties: {
+                  type: { type: :string, example: "safebox" },
+                  attributes: {
+                    type: :object,
+                    properties: {
+                      id: { type: :string, format: :uuid, example: "f626c808-648c-41fe-865d-c6062f3e0899" },
+                      name: { type: :string, example: "Secure safebox 01" },
+                      password: { type: :string, example: "extremelySecurePassword" }
+                    },
+                    required: %i[id name password]
+                  }
+                }
+              }
+            },
+            required: %w[data]
+          },
+          api_error: {
+            type: :object,
+            properties: {
+              errors: {
+                type: :array,
+                items: {
+                  properties: {
+                    id: { type: :string, format: :uuid, example: "9a80bb9b-3e9c-4eef-83b6-12990cf0aab2" },
+                    title: { type: :string, example: "Unknown attribute" },
+                    detail: { type: :string, example: "Unknown attribute: 'userId'" },
+                    status: { type: :string, example: "400" },
+                    code: { type: :string, example: "101" },
+                    source: {
+                      type: :object,
+                      properties: {
+                        pointer: { type: :string, example: "data/attributes/userId" }
+                      }
+                    }
+                  },
+                  required: [:title]
+                }
+              }
+            }
+          }
+        }
       },
       servers: [
         {
