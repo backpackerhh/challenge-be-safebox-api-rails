@@ -65,16 +65,16 @@ components:
         data:
           type: object
           properties:
+            id:
+              type: string
+              format: uuid
+              example: f626c808-648c-41fe-865d-c6062f3e0899
             type:
               type: string
               example: safebox
             attributes:
               type: object
               properties:
-                id:
-                  type: string
-                  format: uuid
-                  example: f626c808-648c-41fe-865d-c6062f3e0899
                 name:
                   type: string
                   example: Secure safebox 01
@@ -82,9 +82,12 @@ components:
                   type: string
                   example: extremelySecurePassword
               required:
-              - id
               - name
               - password
+          required:
+          - id
+          - type
+          - attributes
       required:
       - data
     api_error:

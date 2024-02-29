@@ -40,17 +40,18 @@ RSpec.configure do |config|
               data: {
                 type: :object,
                 properties: {
+                  id: { type: :string, format: :uuid, example: "f626c808-648c-41fe-865d-c6062f3e0899" },
                   type: { type: :string, example: "safebox" },
                   attributes: {
                     type: :object,
                     properties: {
-                      id: { type: :string, format: :uuid, example: "f626c808-648c-41fe-865d-c6062f3e0899" },
                       name: { type: :string, example: "Secure safebox 01" },
                       password: { type: :string, example: "extremelySecurePassword" }
                     },
-                    required: %i[id name password]
+                    required: %w[name password]
                   }
-                }
+                },
+                required: %w[id type attributes]
               }
             },
             required: %w[data]
