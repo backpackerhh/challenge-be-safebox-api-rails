@@ -40,7 +40,7 @@ install:
 	@docker compose exec app bundle install
 
 console:
-	@docker compose exec app rails console
+	@docker compose exec app rails console -e $(APP_ENV)
 
 routes:
 	@docker compose exec app rails routes
