@@ -16,7 +16,7 @@ RSpec.describe "Create safebox", type: :request do
 
       response "201", "Safebox successfully created" do
         let(:safebox_params) do
-          { data: {} }
+          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build_params
         end
 
         after do |example|

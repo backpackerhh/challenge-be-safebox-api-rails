@@ -6,7 +6,7 @@ module SafeIsh
       module V1
         class CreateSafeboxController < ApplicationController
           def create
-            render json: {}, status: :ok
+            render json: body_params, status: :ok
           end
         end
       end
