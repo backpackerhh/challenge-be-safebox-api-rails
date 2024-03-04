@@ -1,0 +1,31 @@
+# frozen_string_literal: true
+
+module Shared
+  module Infrastructure
+    class Input
+      attr_reader :raw_data
+
+      def initialize(raw_data:)
+        @raw_data = raw_data
+      end
+
+      def valid?
+        errors.empty?
+      end
+
+      def invalid?
+        !valid?
+      end
+
+      def errors
+        SchemaValidator.validate(schema_name, raw_data)
+      end
+
+      private
+
+      def schema_name
+        raise NotImplementedError
+      end
+    end
+  end
+end

@@ -7,7 +7,8 @@
         "id": {
           "type": "string",
           "format": "uuid",
-          "example": "f626c808-648c-41fe-865d-c6062f3e0899"
+          "example": "f626c808-648c-41fe-865d-c6062f3e0899",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
         },
         "type": {
           "type": "string",
@@ -18,11 +19,14 @@
           "properties": {
             "name": {
               "type": "string",
-              "example": "Secure safebox 01"
+              "example": "Secure safebox 01",
+              "minLength": 3,
+              "maxLength": 50
             },
             "password": {
               "type": "string",
-              "example": "extremelySecurePassword"
+              "example": "extremelySecurePassword",
+              "minLength": 6
             }
           },
           "required": ["name", "password"]

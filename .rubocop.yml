@@ -19,9 +19,24 @@ Style/StringLiterals:
 Style/Documentation:
   Enabled: false
 
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/NegatedIf:
+  Enabled: false
+
 # Tests
 
 RSpec/NestedGroups:
   Enabled: true
   Exclude:
     - "spec/apps/**/*_request_spec.rb"
+
+RSpec/ExampleLength:
+  Enabled: true
+  Exclude:
+    - "spec/contexts/**/*_use_case_spec.rb"
+
+RSpec/MessageSpies:
+  Enabled: true
+  EnforcedStyle: receive
