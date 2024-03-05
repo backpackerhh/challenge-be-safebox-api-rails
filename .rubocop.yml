@@ -36,6 +36,7 @@ RSpec/ExampleLength:
   Enabled: true
   Exclude:
     - "spec/contexts/**/*_use_case_spec.rb"
+    - "spec/contexts/**/*_repository_spec.rb"
 
 RSpec/MessageSpies:
   Enabled: true

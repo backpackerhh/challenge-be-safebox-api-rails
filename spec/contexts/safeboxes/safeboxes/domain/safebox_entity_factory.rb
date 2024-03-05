@@ -15,9 +15,25 @@ module Safeboxes
         end
 
         def self.build_params(...)
-          attributes = FactoryBot.attributes_for(:safeboxes_safeboxes_safebox, ...)
+          Infrastructure::CreateSafeboxRequest.build(attributes(...))
+        end
 
-          Infrastructure::CreateSafeboxRequest.build(attributes)
+        def self.attributes(...)
+          FactoryBot.attributes_for(:safeboxes_safeboxes_safebox, ...)
+        end
+
+        def self.build(...)
+          attributes = attributes(...)
+
+          NewSafeboxEntity.from_primitives(**attributes)
+        end
+
+        def self.create(...)
+          attributes = attributes(...)
+
+          FactoryBot.create(:safeboxes_safeboxes_safebox, **attributes)
+
+          NewSafeboxEntity.from_primitives(**attributes)
         end
       end
     end
