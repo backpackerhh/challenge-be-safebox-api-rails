@@ -32,9 +32,18 @@
               "pointer": {
                 "type": "string",
                 "example": "data/attributes/userId"
+              },
+              "parameter": {
+                "type": "string",
+                "example": "filter[invalidField]"
+              },
+              "header": {
+                "type": "string",
+                "example": "Content-Type"
               }
             }
-          }
+          },
+          "meta": { "type": "object" }
         },
         "required": ["title"]
       }

@@ -30,8 +30,24 @@ paths:
               operationId: addSafeboxItem
               parameters:
                 path.id: "$request.body#/id"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/safebox"
+        '406':
+          description: Not acceptable media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
         '409':
           description: Safebox already exists
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '415':
+          description: Unsupported media type
           content:
             application/vnd.api+json:
               schema:
@@ -94,6 +110,33 @@ components:
           - attributes
       required:
       - data
+    safebox:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: f626c808-648c-41fe-865d-c6062f3e0899
+            type:
+              type: string
+              example: safebox
+            attributes:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Secure safebox 01
+              required:
+              - name
+          required:
+          - id
+          - type
+          - attributes
+      required:
+      - data
     api_error:
       type: object
       properties:
@@ -123,6 +166,14 @@ components:
                   pointer:
                     type: string
                     example: data/attributes/userId
+                  parameter:
+                    type: string
+                    example: filter[invalidField]
+                  header:
+                    type: string
+                    example: Content-Type
+              meta:
+                type: object
             required:
             - title
 servers:

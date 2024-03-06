@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module Shared
-  module Domain
+  module Infrastructure
     module Errors
-      class InvalidArgumentError < StandardError
+      class InternalServerError < StandardError
         attr_reader :original_error
 
         def initialize(original_error)
@@ -12,16 +12,16 @@ module Shared
         end
 
         def message
-          "Invalid argument error"
+          "Internal server error"
         end
 
         def to_hash
           {
             title: message,
-            detail: original_error.message,
-            status: "422",
-            source: {
-              pointer: "/data" # FIXME: Find a way to be more specific here
+            detail: "Internal server error: #{original_error.message}",
+            status: "500",
+            meta: {
+              backtrace: original_error.backtrace[0...5] # FIXME: remove before moving to production
             }
           }
         end

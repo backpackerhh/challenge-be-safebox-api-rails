@@ -9,7 +9,8 @@ RSpec.configure do |config|
   config.openapi_root = Rails.root.join("api").to_s
 
   # Validate body does not contain undocumented properties
-  config.openapi_strict_schema_validation = true
+  # NOTE: Bear in mind that in strict mode all properties are required
+  # config.openapi_strict_schema_validation = true
 
   # Define one or more Swagger documents and provide global metadata for each one
   # When you run the "rswag:specs:swaggerize" rake task, the complete Swagger will
@@ -35,6 +36,7 @@ RSpec.configure do |config|
         },
         schemas: {
           new_safebox: Shared::Infrastructure::SchemaValidator.load_schema("new_safebox"),
+          safebox: Shared::Infrastructure::SchemaValidator.load_schema("safebox"),
           api_error: Shared::Infrastructure::SchemaValidator.load_schema("api_error")
         }
       },

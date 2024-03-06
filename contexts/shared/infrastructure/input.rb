@@ -18,7 +18,9 @@ module Shared
       end
 
       def errors
-        SchemaValidator.validate(schema_name, raw_data)
+        validation_errors = SchemaValidator.validate(schema_name, raw_data)
+
+        validation_errors.map { |error| Errors::SchemaValidationError.new(error) }
       end
 
       private

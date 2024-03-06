@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "example": "f626c808-648c-41fe-865d-c6062f3e0899"
+        },
+        "type": {
+          "type": "string",
+          "example": "safebox"
+        },
+        "attributes": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "Secure safebox 01"
+            }
+          },
+          "required": ["name"]
+        }
+      },
+      "required": ["id", "type", "attributes"]
+    }
+  },
+  "required": ["data"]
+}

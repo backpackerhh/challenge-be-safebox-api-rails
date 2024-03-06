@@ -2,19 +2,21 @@
 
 require "swagger_helper"
 
-RSpec.describe "Create safebox", type: :request do
+RSpec.describe "Create safebox", type: %i[request database] do
   path "/api/v1/safeboxes" do
     post "Creates a safebox" do
       tags "Safeboxes"
       operationId "createSafebox"
-      consumes "application/vnd.api+json"
-      produces "application/vnd.api+json"
+      consumes SafeIsh::Safeboxes::Api::ApplicationController::JSON_API_MEDIA_TYPE
+      produces SafeIsh::Safeboxes::Api::ApplicationController::JSON_API_MEDIA_TYPE
       description "Creates a new safebox based on a UUID, a non-empty name and a password."
       parameter name: :safebox_params,
                 in: :body,
                 schema: { "$ref" => "#/components/schemas/new_safebox" }
 
       response "201", "Safebox successfully created" do
+        schema "$ref" => "#/components/schemas/safebox"
+
         let(:safebox_params) do
           Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build_params
         end
@@ -43,37 +45,161 @@ RSpec.describe "Create safebox", type: :request do
           }
         end
 
-        run_test!
+        run_test! do |response|
+          data = JSON.parse(response.body)
+
+          expect(data).to eq(
+            {
+              "data" => {
+                "id" => safebox_params.dig(:data, :id),
+                "type" => "safebox",
+                "attributes" => {
+                  "name" => safebox_params.dig(:data, :attributes, :name)
+                }
+              }
+            }
+          )
+        end
+      end
+
+      response "406", "Not acceptable media type" do
+        schema "$ref" => "#/components/schemas/api_error"
+
+        let(:Accept) { "application/json" }
+        let(:safebox_params) { {} }
+
+        run_test! do |response|
+          errors = JSON.parse(response.body)
+
+          expect(errors).to eq(
+            {
+              "errors" => [
+                {
+                  "title" => "Not acceptable media type",
+                  "detail" => "Not acceptable media type: application/json",
+                  "status" => "406",
+                  "source" => {
+                    "header" => SafeIsh::Safeboxes::Api::ApplicationController::ACCEPT_HEADER
+                  }
+                }
+              ]
+            }
+          )
+        end
       end
 
       response "409", "Safebox already exists" do
         schema "$ref" => "#/components/schemas/api_error"
 
         let(:safebox_params) do
-          { data: {} }
+          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build_params
         end
 
-        run_test!
+        before do
+          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id: safebox_params.dig(:data, :id))
+        end
+
+        run_test! do |response|
+          errors = JSON.parse(response.body)
+
+          expect(errors).to eq(
+            {
+              "errors" => [
+                {
+                  "title" => "Duplicated record",
+                  "detail" => "Record with ID #{safebox_params.dig(:data, :id)} already exists",
+                  "status" => "409",
+                  "source" => {
+                    "pointer" => "/data/id"
+                  }
+                }
+              ]
+            }
+          )
+        end
+      end
+
+      response "415", "Unsupported media type" do
+        schema "$ref" => "#/components/schemas/api_error"
+
+        let(:"Content-Type") { "application/json" }
+        let(:safebox_params) { {} }
+
+        run_test! do |response|
+          errors = JSON.parse(response.body)
+
+          expect(errors).to eq(
+            {
+              "errors" => [
+                {
+                  "title" => "Unsupported media type",
+                  "detail" => "Unsupported media type: application/json",
+                  "status" => "415",
+                  "source" => {
+                    "header" => SafeIsh::Safeboxes::Api::ApplicationController::CONTENT_TYPE_HEADER
+                  }
+                }
+              ]
+            }
+          )
+        end
       end
 
       response "422", "Malformed expected data" do
         schema "$ref" => "#/components/schemas/api_error"
 
         let(:safebox_params) do
-          { data: {} }
+          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build_params(id: "uuid")
         end
 
-        run_test!
+        run_test! do |response|
+          errors = JSON.parse(response.body)
+
+          expect(errors).to match(
+            {
+              "errors" => [
+                {
+                  "title" => "Invalid schema error",
+                  "detail" => Regexp.new("The property '#/data/id' value \"uuid\" did not match the regex"),
+                  "status" => "422",
+                  "source" => {
+                    "pointer" => "/data/id"
+                  }
+                }
+              ]
+            }
+          )
+        end
       end
 
       response "500", "Unexpected API error" do
         schema "$ref" => "#/components/schemas/api_error"
 
         let(:safebox_params) do
-          { data: {} }
+          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build_params
         end
 
-        run_test!
+        before do
+          allow(Safeboxes::Safeboxes::Infrastructure::CreateSafeboxInput).to receive(:new)
+            .and_raise(ArgumentError, "missing required argument")
+        end
+
+        run_test! do |response|
+          errors = JSON.parse(response.body)
+
+          expect(errors).to match(
+            {
+              "errors" => [
+                {
+                  "title" => "Internal server error",
+                  "detail" => "Internal server error: missing required argument",
+                  "status" => "500",
+                  "meta" => Hash
+                }
+              ]
+            }
+          )
+        end
       end
     end
   end

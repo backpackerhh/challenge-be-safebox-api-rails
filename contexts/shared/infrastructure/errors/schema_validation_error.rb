@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module Shared
-  module Domain
+  module Infrastructure
     module Errors
-      class InvalidArgumentError < StandardError
+      class SchemaValidationError < StandardError
         attr_reader :original_error
 
         def initialize(original_error)
@@ -12,16 +12,16 @@ module Shared
         end
 
         def message
-          "Invalid argument error"
+          "Invalid schema error"
         end
 
         def to_hash
           {
             title: message,
-            detail: original_error.message,
+            detail: original_error.fetch(:message),
             status: "422",
             source: {
-              pointer: "/data" # FIXME: Find a way to be more specific here
+              pointer: original_error.fetch(:fragment)[1..]
             }
           }
         end

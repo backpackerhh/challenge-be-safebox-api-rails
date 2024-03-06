@@ -25,6 +25,13 @@ Style/IfUnlessModifier:
 Style/NegatedIf:
   Enabled: false
 
+# Metrics
+
+Metrics/ParameterLists:
+  Enabled: true
+  Exclude:
+    - "contexts/shared/infrastructure/error.rb"
+
 # Tests
 
 RSpec/NestedGroups:
@@ -37,7 +44,18 @@ RSpec/ExampleLength:
   Exclude:
     - "spec/contexts/**/*_use_case_spec.rb"
     - "spec/contexts/**/*_repository_spec.rb"
+    - "spec/apps/**/*_request_spec.rb"
 
 RSpec/MessageSpies:
   Enabled: true
   EnforcedStyle: receive
+
+RSpec/VariableName:
+  Enabled: true
+  Exclude:
+    - "spec/apps/**/*_request_spec.rb"
+
+RSpec/DescribeClass:
+  Enabled: true
+  Exclude:
+    - "spec/apps/**/*_request_spec.rb"
