@@ -20,16 +20,16 @@ paths:
             open:
               operationId: openSafebox
               parameters:
-                path.id: "$request.body#/id"
-                header.X-SafeIsh-Password: "$request.body#/password"
+                path.id: "$request.body#/data/id"
+                header.X-SafeIsh-Password: "$request.body#/data/attributes/password"
             getItems:
               operationId: getSafeboxItems
               parameters:
-                path.id: "$request.body#/id"
+                path.id: "$request.body#/data/id"
             addItem:
               operationId: addSafeboxItem
               parameters:
-                path.id: "$request.body#/id"
+                path.id: "$request.body#/data/id"
           content:
             application/vnd.api+json:
               schema:
@@ -69,6 +69,82 @@ paths:
           application/vnd.api+json:
             schema:
               "$ref": "#/components/schemas/new_safebox"
+  "/api/v1/safeboxes/{id}/open":
+    post:
+      summary: Opens a safebox
+      tags:
+      - Safeboxes
+      operationId: openSafebox
+      description: Opens the safebox identified by the given ID and password.
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+        description: Safebox ID
+        required: true
+      - name: X-SafeIsh-Password
+        in: header
+        schema:
+          type: string
+        description: Base64-encoded safebox password (use with another security mechanism
+          such as HTTPS/SSL)
+        required: true
+        example: ZXh0cmVtZWx5U2VjdXJlUGFzc3dvcmQ=
+      responses:
+        '200':
+          description: Safebox successfully opened
+          links:
+            getItems:
+              operationId: getSafeboxItems
+              parameters:
+                path.id: "$request.body#/id"
+                header.X-SafeIsh-Token: "$response.body#/data/id"
+            addItem:
+              operationId: addSafeboxItem
+              parameters:
+                path.id: "$request.body#/id"
+                header.X-SafeIsh-Token: "$response.body#/data/id"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/safebox_token"
+        '401':
+          description: Invalid password provided to open safebox
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '404':
+          description: Safebox not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '406':
+          description: Not acceptable media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '415':
+          description: Unsupported media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '423':
+          description: Safebox is locked
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '500':
+          description: Unexpected API error
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
 components:
   securitySchemes:
     bearerToken:
@@ -135,6 +211,23 @@ components:
           - id
           - type
           - attributes
+      required:
+      - data
+    safebox_token:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: eyJfcmFpbHMiOnsiZGF0YSI6WyJjZDcyMjY4OS1hYThiLTQ0NDctOWZkZi1mMTQ3N2MwMDE2YmMiXSwiZXhwIjoiMjAyNC0wMy0wNlQxMDo1ODoyNS42OTFaIiwicHVyIjoiU2FmZWJveGVzOjpTYWZlYm94ZXM6OkluZnJhc3RydWN0dXJlOjpTYWZlYm94UmVjb3JkXG5vcGVuXG4xODAifX0=--7af9de4900d56ac3b2c80468e0343db9ba101bef
+            type:
+              type: string
+              example: safeboxToken
+          required:
+          - id
+          - type
       required:
       - data
     api_error:

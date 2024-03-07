@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "eyJfcmFpbHMiOnsiZGF0YSI6WyJjZDcyMjY4OS1hYThiLTQ0NDctOWZkZi1mMTQ3N2MwMDE2YmMiXSwiZXhwIjoiMjAyNC0wMy0wNlQxMDo1ODoyNS42OTFaIiwicHVyIjoiU2FmZWJveGVzOjpTYWZlYm94ZXM6OkluZnJhc3RydWN0dXJlOjpTYWZlYm94UmVjb3JkXG5vcGVuXG4xODAifX0=--7af9de4900d56ac3b2c80468e0343db9ba101bef"
+        },
+        "type": {
+          "type": "string",
+          "example": "safeboxToken"
+        }
+      },
+      "required": ["id", "type"]
+    }
+  },
+  "required": ["data"]
+}

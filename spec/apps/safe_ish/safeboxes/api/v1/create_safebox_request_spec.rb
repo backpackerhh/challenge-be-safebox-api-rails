@@ -26,20 +26,20 @@ RSpec.describe "Create safebox", type: %i[request database] do
             open: {
               operationId: "openSafebox",
               parameters: {
-                "path.id": "$request.body#/id",
-                "header.X-SafeIsh-Password": "$request.body#/password"
+                "path.id": "$request.body#/data/id",
+                "header.X-SafeIsh-Password": "$request.body#/data/attributes/password"
               }
             },
             getItems: {
               operationId: "getSafeboxItems",
               parameters: {
-                "path.id": "$request.body#/id"
+                "path.id": "$request.body#/data/id"
               }
             },
             addItem: {
               operationId: "addSafeboxItem",
               parameters: {
-                "path.id": "$request.body#/id"
+                "path.id": "$request.body#/data/id"
               }
             }
           }

@@ -37,6 +37,7 @@ RSpec.configure do |config|
         schemas: {
           new_safebox: Shared::Infrastructure::SchemaValidator.load_schema("new_safebox"),
           safebox: Shared::Infrastructure::SchemaValidator.load_schema("safebox"),
+          safebox_token: Shared::Infrastructure::SchemaValidator.load_schema("safebox_token"),
           api_error: Shared::Infrastructure::SchemaValidator.load_schema("api_error")
         }
       },

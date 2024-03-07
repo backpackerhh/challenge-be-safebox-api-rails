@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   scope :api do
     scope :v1 do
       post "safeboxes", to: "safe_ish/safeboxes/api/v1/create_safebox#create"
+      post "safeboxes/:id/open", to: "safe_ish/safeboxes/api/v1/open_safebox#create"
     end
   end
 end
