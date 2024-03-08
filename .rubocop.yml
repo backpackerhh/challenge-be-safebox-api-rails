@@ -43,6 +43,11 @@ Rails/DynamicFindBy:
   AllowedReceivers:
     - repository
 
+Rails/SkipsModelValidations:
+  Enabled: true
+  AllowedMethods:
+    - increment!
+
 # Tests
 
 RSpec/NestedGroups:
@@ -50,6 +55,7 @@ RSpec/NestedGroups:
   Exclude:
     - "spec/apps/**/*_request_spec.rb"
     - "spec/contexts/**/*_use_case_spec.rb"
+    - "spec/contexts/**/*_repository_spec.rb"
 
 RSpec/ExampleLength:
   Enabled: true

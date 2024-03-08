@@ -18,7 +18,7 @@ RSpec.describe "Create safebox", type: %i[request database] do
         schema "$ref" => "#/components/schemas/safebox"
 
         let(:safebox_params) do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build_params
+          Safeboxes::Safeboxes::Domain::NewSafeboxEntityFactory.build_params
         end
 
         after do |example|
@@ -92,11 +92,11 @@ RSpec.describe "Create safebox", type: %i[request database] do
         schema "$ref" => "#/components/schemas/api_error"
 
         let(:safebox_params) do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build_params
+          Safeboxes::Safeboxes::Domain::NewSafeboxEntityFactory.build_params
         end
 
         before do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id: safebox_params.dig(:data, :id))
+          Safeboxes::Safeboxes::Domain::NewSafeboxEntityFactory.create(id: safebox_params.dig(:data, :id))
         end
 
         run_test! do |response|
@@ -149,7 +149,7 @@ RSpec.describe "Create safebox", type: %i[request database] do
         schema "$ref" => "#/components/schemas/api_error"
 
         let(:safebox_params) do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build_params(id: "uuid")
+          Safeboxes::Safeboxes::Domain::NewSafeboxEntityFactory.build_params(id: "uuid")
         end
 
         run_test! do |response|
@@ -176,7 +176,7 @@ RSpec.describe "Create safebox", type: %i[request database] do
         schema "$ref" => "#/components/schemas/api_error"
 
         let(:safebox_params) do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build_params
+          Safeboxes::Safeboxes::Domain::NewSafeboxEntityFactory.build_params
         end
 
         before do

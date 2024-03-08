@@ -10,7 +10,7 @@ module Shared
       end
 
       def ==(other)
-        id == other.id
+        id == other.id && self.class == other.class
       end
     end
   end

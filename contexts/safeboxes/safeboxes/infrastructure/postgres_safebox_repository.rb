@@ -16,12 +16,30 @@ module Safeboxes
           SafeboxRecord.count
         end
 
-        def find_by_id(_id)
-          # TODO
+        def find_by_id(id)
+          safebox_record = find_record_by_id(id)
+
+          Domain::SafeboxEntity.from_primitives(safebox_record.attributes.transform_keys(&:to_sym))
         end
 
-        def enable_opening_with_generated_token(_id, _password)
-          # TODO
+        def enable_opening_with_generated_token(id, password)
+          safebox_record = find_record_by_id(id)
+
+          if !safebox_record.authenticate_password(password)
+            safebox_record.increment!(:failed_opening_attempts)
+
+            return
+          end
+
+          Domain::SafeboxTokenEntity.from_primitives(id: safebox_record.generate_token_for(:open))
+        end
+
+        private
+
+        def find_record_by_id(id)
+          SafeboxRecord.find(id)
+        rescue ActiveRecord::RecordNotFound
+          raise Shared::Infrastructure::Errors::RecordNotFoundError, id
         end
       end
     end
