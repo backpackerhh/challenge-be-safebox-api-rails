@@ -15,6 +15,14 @@ module Safeboxes
         def size
           SafeboxRecord.count
         end
+
+        def find_by_id(_id)
+          # TODO
+        end
+
+        def enable_opening_with_generated_token(_id, _password)
+          # TODO
+        end
       end
     end
   end

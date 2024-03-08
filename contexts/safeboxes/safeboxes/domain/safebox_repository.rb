@@ -6,7 +6,7 @@ module Safeboxes
   module Safeboxes
     module Domain
       module SafeboxRepository
-        Interface = Dry.Types.Interface(:create)
+        Interface = Dry.Types.Interface(:create, :find_by_id, :enable_opening_with_generated_token)
       end
     end
   end

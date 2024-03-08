@@ -29,7 +29,7 @@ RSpec.describe Safeboxes::Safeboxes::Infrastructure::PostgresSafeboxRepository, 
     context "without errors" do
       it "creates a new safebox" do
         repository = described_class.new
-        safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build
+        safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build_new
 
         expect do
           repository.create(safebox.to_primitives)

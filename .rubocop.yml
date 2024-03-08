@@ -32,12 +32,24 @@ Metrics/ParameterLists:
   Exclude:
     - "contexts/shared/infrastructure/error.rb"
 
+Metrics/AbcSize:
+  Enabled: true
+  CountRepeatedAttributes: false
+
+# Rails
+
+Rails/DynamicFindBy:
+  Enabled: true
+  AllowedReceivers:
+    - repository
+
 # Tests
 
 RSpec/NestedGroups:
   Enabled: true
   Exclude:
     - "spec/apps/**/*_request_spec.rb"
+    - "spec/contexts/**/*_use_case_spec.rb"
 
 RSpec/ExampleLength:
   Enabled: true

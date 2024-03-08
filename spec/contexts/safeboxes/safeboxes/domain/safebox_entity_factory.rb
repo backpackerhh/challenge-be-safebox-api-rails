@@ -11,6 +11,12 @@ module Safeboxes
             id { SafeboxIdValueObjectFactory.build }
             name { SafeboxNameValueObjectFactory.build }
             password { SafeboxPasswordValueObjectFactory.build }
+            password_digest { SafeboxPasswordDigestValueObjectFactory.build(password) }
+            failed_opening_attempts { SafeboxFailedOpeningAttemptsValueObjectFactory.build(0) }
+
+            trait :locked do
+              failed_opening_attempts { SafeboxFailedOpeningAttemptsValueObjectFactory.locked }
+            end
           end
         end
 
@@ -23,6 +29,12 @@ module Safeboxes
         end
 
         def self.build(...)
+          attributes = attributes(...)
+
+          SafeboxEntity.from_primitives(**attributes)
+        end
+
+        def self.build_new(...)
           attributes = attributes(...)
 
           NewSafeboxEntity.from_primitives(**attributes)
