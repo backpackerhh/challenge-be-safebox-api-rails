@@ -69,6 +69,73 @@ paths:
           application/vnd.api+json:
             schema:
               "$ref": "#/components/schemas/new_safebox"
+  "/api/v1/safeboxes/{id}/items":
+    get:
+      summary: Retrieves the content of a safebox
+      tags:
+      - Safeboxes
+      operationId: getSafeboxItems
+      description: Retrieves the currently stored contents in the safebox identified
+        by the given ID and opening token.
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+        description: Safebox ID
+        required: true
+        example: f626c808-648c-41fe-865d-c6062f3e0899
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Safebox contents successfully retrieved
+          links:
+            addItem:
+              operationId: addSafeboxItem
+              parameters:
+                path.id: "$request.path#/id"
+                header.Authorization: "$request.header.Authorization"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/safebox_items"
+        '401':
+          description: Invalid token provided to retrieve safebox items
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '404':
+          description: Safebox not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '406':
+          description: Not acceptable media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '415':
+          description: Unsupported media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '423':
+          description: Safebox is locked
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '500':
+          description: Unexpected API error
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
   "/api/v1/safeboxes/{id}/open":
     post:
       summary: Opens a safebox
@@ -100,12 +167,12 @@ paths:
               operationId: getSafeboxItems
               parameters:
                 path.id: "$request.path#/id"
-                header.X-SafeIsh-Token: "$response.body#/data/id"
+                header.Authorization: "$response.body#/data/id"
             addItem:
               operationId: addSafeboxItem
               parameters:
                 path.id: "$request.path#/id"
-                header.X-SafeIsh-Token: "$response.body#/data/id"
+                header.Authorization: "$response.body#/data/id"
           content:
             application/vnd.api+json:
               schema:
@@ -148,7 +215,7 @@ paths:
                 "$ref": "#/components/schemas/api_error"
 components:
   securitySchemes:
-    bearerToken:
+    bearerAuth:
       type: http
       scheme: bearer
   schemas:
@@ -229,6 +296,59 @@ components:
           required:
           - id
           - type
+      required:
+      - data
+    safebox_items:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+                example: f626c808-648c-41fe-865d-c6062f3e0899
+              type:
+                type: string
+                example: safeboxItem
+              attributes:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Safebox content 01
+                required:
+                - name
+              relationships:
+                type: object
+                properties:
+                  safebox:
+                    type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            format: uuid
+                            example: f1e0ca7c-4972-4383-a538-cd6ad52aa08f
+                          type:
+                            type: string
+                            example: safebox
+                        required:
+                        - id
+                        - type
+                    required:
+                    - data
+                required:
+                - safebox
+            required:
+            - id
+            - type
+            - attributes
+            - relationships
       required:
       - data
     api_error:

@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "f626c808-648c-41fe-865d-c6062f3e0899"
+          },
+          "type": {
+            "type": "string",
+            "example": "safeboxItem"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Safebox content 01"
+              }
+            },
+            "required": ["name"]
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "safebox": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "f1e0ca7c-4972-4383-a538-cd6ad52aa08f"
+                      },
+                      "type": {
+                        "type": "string",
+                        "example": "safebox"
+                      }
+                    },
+                    "required": ["id", "type"]
+                  }
+                },
+                "required": ["data"]
+              }
+            },
+            "required": ["safebox"]
+          }
+        },
+        "required": ["id", "type", "attributes", "relationships"]
+      }
+    }
+  },
+  "required": ["data"]
+}

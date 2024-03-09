@@ -2,52 +2,35 @@
 
 require "swagger_helper"
 
-RSpec.describe "Open safebox", type: %i[request database] do
-  path "/api/v1/safeboxes/{id}/open" do
-    post "Opens a safebox" do
+RSpec.describe "List safebox items", type: %i[request database] do
+  path "/api/v1/safeboxes/{id}/items" do
+    get "Retrieves the content of a safebox" do
       tags "Safeboxes"
-      operationId "openSafebox"
+      operationId "getSafeboxItems"
       consumes SafeIsh::Safeboxes::Api::ApplicationController::JSON_API_MEDIA_TYPE
       produces SafeIsh::Safeboxes::Api::ApplicationController::JSON_API_MEDIA_TYPE
-      description "Opens the safebox identified by the given ID and password."
+      description "Retrieves the currently stored contents in the safebox identified by the given ID and opening token."
       parameter name: :id,
                 in: :path,
                 schema: { type: :string },
                 description: "Safebox ID",
                 required: true,
                 example: "f626c808-648c-41fe-865d-c6062f3e0899"
-      parameter name: "X-SafeIsh-Password",
-                in: :header,
-                schema: { type: :string },
-                description: "Base64-encoded safebox password (use with another security mechanism such as HTTPS/SSL)",
-                required: true,
-                example: "ZXh0cmVtZWx5U2VjdXJlUGFzc3dvcmQ="
+      security [bearerAuth: []]
 
-      response "200", "Safebox successfully opened" do
-        schema "$ref" => "#/components/schemas/safebox_token"
+      response "200", "Safebox contents successfully retrieved" do
+        schema "$ref" => "#/components/schemas/safebox_items"
 
-        let(:"X-SafeIsh-Password") { Base64.encode64(password) }
+        let(:Authorization) { "Bearer <token>" }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
-        let(:password) { "secret" }
-
-        before do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
-        end
 
         after do |example|
           example.metadata[:response][:links] = {
-            getItems: {
-              operationId: "getSafeboxItems",
-              parameters: {
-                "path.id": "$request.path#/id",
-                "header.Authorization": "$response.body#/data/id"
-              }
-            },
             addItem: {
               operationId: "addSafeboxItem",
               parameters: {
                 "path.id": "$request.path#/id",
-                "header.Authorization": "$response.body#/data/id"
+                "header.Authorization": "$request.header.Authorization"
               }
             }
           }
@@ -58,41 +41,24 @@ RSpec.describe "Open safebox", type: %i[request database] do
 
           expect(data).to match(
             {
-              "data" => {
-                "id" => String,
-                "type" => "safeboxToken"
-              }
+              "data" => []
             }
           )
         end
       end
 
-      response "401", "Invalid password provided to open safebox" do
+      response "401", "Invalid token provided to retrieve safebox items" do
         schema "$ref" => "#/components/schemas/api_error"
 
-        let(:"X-SafeIsh-Password") { Base64.encode64("fake") }
+        let(:Authorization) { "Bearer <token>" }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
-        let(:password) { "secret" }
-
-        before do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
-        end
 
         run_test! do |response|
           errors = JSON.parse(response.body)
 
           expect(errors).to eq(
             {
-              "errors" => [
-                {
-                  "title" => "Invalid password",
-                  "detail" => "The provided password to open safebox with ID #{id} is not valid",
-                  "status" => "401",
-                  "source" => {
-                    "header" => SafeIsh::Safeboxes::Api::ApplicationController::OPEN_SAFEBOX_HEADER
-                  }
-                }
-              ]
+              "errors" => []
             }
           )
         end
@@ -101,7 +67,7 @@ RSpec.describe "Open safebox", type: %i[request database] do
       response "404", "Safebox not found" do
         schema "$ref" => "#/components/schemas/api_error"
 
-        let(:"X-SafeIsh-Password") { "it-does-not-matter" }
+        let(:Authorization) { "Bearer <token>" }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
 
         run_test! do |response|
@@ -109,13 +75,7 @@ RSpec.describe "Open safebox", type: %i[request database] do
 
           expect(errors).to eq(
             {
-              "errors" => [
-                {
-                  "title" => "Record not found",
-                  "detail" => "Record with ID #{id} does not exist",
-                  "status" => "404"
-                }
-              ]
+              "errors" => []
             }
           )
         end
@@ -125,7 +85,7 @@ RSpec.describe "Open safebox", type: %i[request database] do
         schema "$ref" => "#/components/schemas/api_error"
 
         let(:Accept) { "application/json" }
-        let(:"X-SafeIsh-Password") { "it-does-not-matter" }
+        let(:Authorization) { "Bearer it-does-not-matter" }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
 
         run_test! do |response|
@@ -152,7 +112,7 @@ RSpec.describe "Open safebox", type: %i[request database] do
         schema "$ref" => "#/components/schemas/api_error"
 
         let(:"Content-Type") { "application/json" }
-        let(:"X-SafeIsh-Password") { "it-does-not-matter" }
+        let(:Authorization) { "Bearer it-does-not-matter" }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
 
         run_test! do |response|
@@ -178,25 +138,15 @@ RSpec.describe "Open safebox", type: %i[request database] do
       response "423", "Safebox is locked" do
         schema "$ref" => "#/components/schemas/api_error"
 
-        let(:"X-SafeIsh-Password") { "it-does-not-matter" }
+        let(:Authorization) { "Bearer <token>" }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
-
-        before do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(:locked, id:)
-        end
 
         run_test! do |response|
           errors = JSON.parse(response.body)
 
           expect(errors).to match(
             {
-              "errors" => [
-                {
-                  "title" => "Safebox locked",
-                  "detail" => "Safebox with ID #{id} is locked",
-                  "status" => "423"
-                }
-              ]
+              "errors" => []
             }
           )
         end
@@ -205,27 +155,15 @@ RSpec.describe "Open safebox", type: %i[request database] do
       response "500", "Unexpected API error" do
         schema "$ref" => "#/components/schemas/api_error"
 
-        let(:"X-SafeIsh-Password") { "it-does-not-matter" }
+        let(:Authorization) { "Bearer <token>" }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
-
-        before do
-          allow(Safeboxes::Safeboxes::Infrastructure::OpenSafeboxInput).to receive(:new)
-            .and_raise(ArgumentError, "missing required argument")
-        end
 
         run_test! do |response|
           errors = JSON.parse(response.body)
 
           expect(errors).to match(
             {
-              "errors" => [
-                {
-                  "title" => "Internal server error",
-                  "detail" => "Internal server error: missing required argument",
-                  "status" => "500",
-                  "meta" => Hash
-                }
-              ]
+              "errors" => []
             }
           )
         end
