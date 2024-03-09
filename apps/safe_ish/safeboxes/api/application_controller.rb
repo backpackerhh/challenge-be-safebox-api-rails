@@ -7,6 +7,7 @@ module SafeIsh
         JSON_API_MEDIA_TYPE = "application/vnd.api+json"
         ACCEPT_HEADER = "Accept"
         CONTENT_TYPE_HEADER = "Content-Type"
+        OPEN_SAFEBOX_HEADER = "X-SafeIsh-Password"
 
         before_action :check_accept_header
         before_action :check_content_type_header
@@ -46,6 +47,20 @@ module SafeIsh
 
         rescue_from Shared::Infrastructure::Errors::DuplicatedRecordError do |e|
           failed_response(e, status: :conflict)
+        end
+
+        rescue_from Shared::Infrastructure::Errors::RecordNotFoundError do |e|
+          failed_response(e, status: :not_found)
+        end
+
+        rescue_from ::Safeboxes::Safeboxes::Domain::Errors::LockedSafeboxError do |e|
+          failed_response(e, status: :locked)
+        end
+
+        rescue_from ::Safeboxes::Safeboxes::Domain::Errors::InvalidSafeboxPasswordError do |e|
+          e.header = OPEN_SAFEBOX_HEADER
+
+          failed_response(e, status: :unauthorized)
         end
 
         private

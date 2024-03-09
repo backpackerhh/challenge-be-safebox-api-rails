@@ -83,6 +83,7 @@ paths:
           type: string
         description: Safebox ID
         required: true
+        example: f626c808-648c-41fe-865d-c6062f3e0899
       - name: X-SafeIsh-Password
         in: header
         schema:
@@ -98,12 +99,12 @@ paths:
             getItems:
               operationId: getSafeboxItems
               parameters:
-                path.id: "$request.body#/id"
+                path.id: "$request.path#/id"
                 header.X-SafeIsh-Token: "$response.body#/data/id"
             addItem:
               operationId: addSafeboxItem
               parameters:
-                path.id: "$request.body#/id"
+                path.id: "$request.path#/id"
                 header.X-SafeIsh-Token: "$response.body#/data/id"
           content:
             application/vnd.api+json:

@@ -32,6 +32,10 @@ Metrics/ParameterLists:
   Exclude:
     - "contexts/shared/infrastructure/error.rb"
 
+Metrics/MethodLength:
+  Enabled: true
+  CountAsOne: ["array", "heredoc", "method_call"]
+
 Metrics/AbcSize:
   Enabled: true
   CountRepeatedAttributes: false
