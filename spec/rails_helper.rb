@@ -69,4 +69,7 @@ RSpec.configure do |config|
 
   # Factories
   config.include FactoryBot::Syntax::Methods
+
+  # Time helpers
+  config.include ActiveSupport::Testing::TimeHelpers
 end

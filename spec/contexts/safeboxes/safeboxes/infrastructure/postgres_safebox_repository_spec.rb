@@ -113,4 +113,40 @@ RSpec.describe Safeboxes::Safeboxes::Infrastructure::PostgresSafeboxRepository, 
       end
     end
   end
+
+  describe "#valid_token?(token)" do
+    it "returns false when token has expired" do
+      repository = described_class.new
+      safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(password: "secret")
+      token = repository.enable_opening_with_generated_token(safebox.id.value, "secret")
+      ttl = Safeboxes::Safeboxes::Infrastructure::SafeboxRecord::OPEN_TTL_IN_SECONDS
+
+      travel_to (ttl + 1).seconds.from_now do
+        result = repository.valid_token?(token.id.value)
+
+        expect(result).to be false
+      end
+    end
+
+    it "returns false when token is not valid" do
+      repository = described_class.new
+
+      result = repository.valid_token?("invalid")
+
+      expect(result).to be false
+    end
+
+    it "returns true when token is valid" do
+      repository = described_class.new
+      safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(password: "secret")
+      token = repository.enable_opening_with_generated_token(safebox.id.value, "secret")
+      ttl = Safeboxes::Safeboxes::Infrastructure::SafeboxRecord::OPEN_TTL_IN_SECONDS
+
+      travel_to ttl.seconds.from_now do
+        result = repository.valid_token?(token.id.value)
+
+        expect(result).to be true
+      end
+    end
+  end
 end

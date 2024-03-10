@@ -35,7 +35,9 @@ module Safeboxes
         end
 
         def valid_token?(token)
-          # TODO
+          safebox_record = SafeboxRecord.find_by_token_for(:open, token)
+
+          !safebox_record.nil?
         end
 
         private
