@@ -25,6 +25,10 @@ module Safeboxes
           failed_opening_attempts.value == SafeboxFailedOpeningAttemptsValueObject::MAX_ATTEMPTS_BEFORE_LOCKING
         end
 
+        def items(domain_service = LoadSafeboxItemsService.new)
+          domain_service.load(safebox_id: id.value) # Lazy loaded
+        end
+
         def to_primitives
           {
             id: id.value,

@@ -2,16 +2,8 @@
 
 module Shared
   module Domain
-    class AggregateRoot
-      private_class_method :new
-
-      def to_primitives
-        raise NotImplementedError, "Define #to_primitives method"
-      end
-
-      def ==(other)
-        id == other.id && self.class == other.class
-      end
+    class AggregateRoot < Aggregate
+      # NOTE: anything specific to aggregate roots but not to regular aggregates could be added here
     end
   end
 end

@@ -34,6 +34,10 @@ module Safeboxes
           Domain::SafeboxTokenEntity.from_primitives(id: safebox_record.generate_token_for(:open))
         end
 
+        def valid_token?(token)
+          # TODO
+        end
+
         private
 
         def find_record_by_id(id)
