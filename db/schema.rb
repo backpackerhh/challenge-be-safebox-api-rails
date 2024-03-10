@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_07_143811) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_10_083721) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "safeboxes_safebox_items", id: :uuid, default: nil, force: :cascade do |t|
+    t.string "name", null: false
+    t.uuid "safeboxes_safeboxes_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["safeboxes_safeboxes_id"], name: "index_safeboxes_safebox_items_on_safeboxes_safeboxes_id"
+  end
 
   create_table "safeboxes_safeboxes", id: :uuid, default: nil, force: :cascade do |t|
     t.string "name", limit: 50, null: false
@@ -23,4 +31,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_07_143811) do
     t.integer "failed_opening_attempts", default: 0, null: false
   end
 
+  add_foreign_key "safeboxes_safebox_items", "safeboxes_safeboxes", column: "safeboxes_safeboxes_id"
 end
