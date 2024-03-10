@@ -2,6 +2,9 @@
 
 SafeIsh::Container.register_provider :safeboxes, namespace: true do
   start do
-    register "safeboxes.safebox_repository", Safeboxes::Safeboxes::Infrastructure::PostgresSafeboxRepository.new
+    register "safeboxes.safebox_repository",
+             Safeboxes::Safeboxes::Infrastructure::PostgresSafeboxRepository.new
+    register "safeboxes.safebox_item_repository",
+             Safeboxes::Safeboxes::Infrastructure::PostgresSafeboxItemRepository.new
   end
 end

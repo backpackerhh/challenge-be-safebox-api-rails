@@ -102,6 +102,12 @@ paths:
                 "$ref": "#/components/schemas/safebox_items"
         '401':
           description: Invalid token provided to retrieve safebox items
+          headers:
+            WWW-Authenticate:
+              schema:
+                type: string
+                description: Indicates what authentication schemes can be used to
+                  access the resource.
           content:
             application/vnd.api+json:
               schema:

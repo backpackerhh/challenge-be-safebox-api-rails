@@ -8,6 +8,8 @@ module SafeIsh
         ACCEPT_HEADER = "Accept"
         CONTENT_TYPE_HEADER = "Content-Type"
         OPEN_SAFEBOX_HEADER = "X-SafeIsh-Password"
+        AUTHORIZATION_HEADER = "Authorization"
+        AUTHENTICATION_HEADER = "WWW-Authenticate"
 
         before_action :check_accept_header
         before_action :check_content_type_header
@@ -63,6 +65,14 @@ module SafeIsh
           failed_response(e, status: :unauthorized)
         end
 
+        rescue_from ::Safeboxes::Safeboxes::Domain::Errors::InvalidSafeboxTokenError do |e|
+          e.header = AUTHORIZATION_HEADER
+
+          failed_response(e, status: :unauthorized)
+
+          response.set_header(AUTHENTICATION_HEADER, "Bearer realm='Access to an open safebox'")
+        end
+
         private
 
         def check_accept_header
@@ -85,6 +95,10 @@ module SafeIsh
 
         def set_content_type_header
           response.set_header(CONTENT_TYPE_HEADER, JSON_API_MEDIA_TYPE)
+        end
+
+        def extract_token_from_auth_header
+          request.headers[AUTHORIZATION_HEADER].to_s.sub("Bearer ", "") # FIXME: naive approach
         end
       end
     end

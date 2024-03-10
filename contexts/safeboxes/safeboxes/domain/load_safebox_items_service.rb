@@ -3,9 +3,11 @@
 module Safeboxes
   module Safeboxes
     module Domain
-      class LoadSafeboxItemsService
+      class LoadSafeboxItemsService < Shared::Domain::Service
+        repository "safeboxes.safeboxes.safebox_item_repository", Domain::SafeboxItemRepository::Interface
+
         def load(safebox_id:)
-          # TODO
+          repository.all(safebox_id)
         end
       end
     end

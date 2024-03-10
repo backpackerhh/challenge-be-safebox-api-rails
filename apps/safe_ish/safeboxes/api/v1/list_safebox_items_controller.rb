@@ -6,7 +6,18 @@ module SafeIsh
       module V1
         class ListSafeboxItemsController < ApplicationController
           def index
-            # TODO
+            input = ::Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput.new(
+              id: params[:id],
+              token: extract_token_from_auth_header
+            )
+            result = ::Safeboxes::Safeboxes::Application::ListSafeboxItemsUseCase.new.retrieve_all(input:)
+
+            result.on_success do |safebox_items|
+              successful_response(
+                ::Safeboxes::Safeboxes::Infrastructure::SafeboxItemSerializer.new(safebox_items),
+                status: :ok
+              )
+            end
           end
         end
       end

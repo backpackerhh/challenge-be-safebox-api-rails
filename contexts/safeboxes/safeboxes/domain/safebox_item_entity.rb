@@ -19,6 +19,13 @@ module Safeboxes
           @safebox_id = SafeboxIdValueObject.new(value: safebox_id)
         end
 
+        # Workaround for a known limitation of jsonapi-serializers
+        #
+        # @see https://github.com/jsonapi-serializer/jsonapi-serializer/issues/53
+        def safebox_relationship_id
+          safebox_id.value
+        end
+
         def to_primitives
           {
             id: id.value,
