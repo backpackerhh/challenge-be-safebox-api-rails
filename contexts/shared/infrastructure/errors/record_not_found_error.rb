@@ -4,11 +4,12 @@ module Shared
   module Infrastructure
     module Errors
       class RecordNotFoundError < StandardError
-        attr_reader :id
+        attr_reader :record_id, :record_type
 
-        def initialize(id)
+        def initialize(record_id, record_type)
           super()
-          @id = id
+          @record_id = record_id
+          @record_type = record_type
         end
 
         def message
@@ -18,7 +19,7 @@ module Shared
         def to_hash
           {
             title: message,
-            detail: "Record with ID #{id} does not exist",
+            detail: "#{record_type.capitalize} with ID #{record_id} does not exist",
             status: "404"
           }
         end

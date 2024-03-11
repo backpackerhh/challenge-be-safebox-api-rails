@@ -7,7 +7,7 @@ module Safeboxes
         def create(attributes)
           SafeboxRecord.create!(attributes)
         rescue ActiveRecord::RecordNotUnique
-          raise Shared::Infrastructure::Errors::DuplicatedRecordError, attributes[:id]
+          raise Shared::Infrastructure::Errors::DuplicatedRecordError.new(attributes[:id], "safebox")
         rescue ActiveRecord::RecordInvalid => e
           raise Shared::Domain::Errors::InvalidArgumentError, e
         end
@@ -45,7 +45,7 @@ module Safeboxes
         def find_record_by_id(id)
           SafeboxRecord.find(id)
         rescue ActiveRecord::RecordNotFound
-          raise Shared::Infrastructure::Errors::RecordNotFoundError, id
+          raise Shared::Infrastructure::Errors::RecordNotFoundError.new(id, "safebox")
         end
       end
     end

@@ -107,7 +107,7 @@ RSpec.describe "Create safebox", type: %i[request database] do
               "errors" => [
                 {
                   "title" => "Duplicated record",
-                  "detail" => "Record with ID #{safebox_params.dig(:data, :id)} already exists",
+                  "detail" => "Safebox with ID #{safebox_params.dig(:data, :id)} already exists",
                   "status" => "409",
                   "source" => {
                     "pointer" => "/data/id"

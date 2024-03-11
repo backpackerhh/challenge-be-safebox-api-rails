@@ -4,11 +4,12 @@ module Shared
   module Infrastructure
     module Errors
       class DuplicatedRecordError < StandardError
-        attr_reader :id
+        attr_reader :record_id, :record_type
 
-        def initialize(id)
+        def initialize(record_id, record_type)
           super()
-          @id = id
+          @record_id = record_id
+          @record_type = record_type
         end
 
         def message
@@ -18,7 +19,7 @@ module Shared
         def to_hash
           {
             title: message,
-            detail: "Record with ID #{id} already exists",
+            detail: "#{record_type.capitalize} with ID #{record_id} already exists",
             status: "409",
             source: {
               pointer: "/data/id"

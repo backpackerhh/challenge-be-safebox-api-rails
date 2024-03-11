@@ -14,6 +14,10 @@ module Safeboxes
           end
         end
 
+        def self.build_params(...)
+          Infrastructure::AddSafeboxItemRequest.build(attributes(...))
+        end
+
         def self.attributes(...)
           FactoryBot.attributes_for(:safeboxes_safeboxes_safebox_item, ...)
         end

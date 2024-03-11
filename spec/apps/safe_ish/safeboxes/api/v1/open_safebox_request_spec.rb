@@ -112,7 +112,7 @@ RSpec.describe "Open safebox", type: %i[request database] do
               "errors" => [
                 {
                   "title" => "Record not found",
-                  "detail" => "Record with ID #{id} does not exist",
+                  "detail" => "Safebox with ID #{id} does not exist",
                   "status" => "404"
                 }
               ]

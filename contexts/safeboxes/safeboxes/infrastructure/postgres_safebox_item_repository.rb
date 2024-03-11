@@ -25,13 +25,13 @@ module Safeboxes
             safebox_id: safebox_item_record.safebox_id
           )
         rescue ActiveRecord::RecordNotFound
-          raise Shared::Infrastructure::Errors::RecordNotFoundError, id
+          raise Shared::Infrastructure::Errors::RecordNotFoundError.new(id, "safebox item")
         end
 
         def create(attributes)
           SafeboxItemRecord.create!(attributes)
         rescue ActiveRecord::RecordNotUnique
-          raise Shared::Infrastructure::Errors::DuplicatedRecordError, attributes[:id]
+          raise Shared::Infrastructure::Errors::DuplicatedRecordError.new(attributes[:id], "safebox item")
         rescue ActiveRecord::RecordInvalid, ActiveRecord::NotNullViolation => e
           raise Shared::Domain::Errors::InvalidArgumentError, e
         end

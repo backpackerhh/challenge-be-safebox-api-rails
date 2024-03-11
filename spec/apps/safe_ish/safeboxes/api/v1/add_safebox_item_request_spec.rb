@@ -22,12 +22,18 @@ RSpec.describe "Add safebox item", type: %i[request database] do
       security [bearerAuth: []]
 
       response "201", "Safebox content successfully added" do
-        schema "$ref" => "#/components/schemas/safebox_items"
+        schema "$ref" => "#/components/schemas/new_safebox_item"
 
-        let(:Authorization) { "Bearer <token>" }
+        let(:Authorization) { "Bearer #{token}" }
+        let(:token) { Safeboxes::Safeboxes::Infrastructure::Utils.generate_token(id, password) }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
+        let(:password) { "secret" }
         let(:safebox_item_params) do
-          {}
+          Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.build_params(safebox_id: id)
+        end
+
+        before do
+          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
         end
 
         after do |example|
@@ -47,7 +53,21 @@ RSpec.describe "Add safebox item", type: %i[request database] do
 
           expect(data).to match(
             {
-              "data" => {}
+              "data" => {
+                "id" => safebox_item_params.dig(:data, :id),
+                "type" => "safeboxItem",
+                "attributes" => {
+                  "name" => safebox_item_params.dig(:data, :attributes, :name)
+                },
+                "relationships" => {
+                  "safebox" => {
+                    "data" => {
+                      "id" => safebox_item_params.dig(:data, :relationships, :safebox, :data, :id),
+                      "type" => "safebox"
+                    }
+                  }
+                }
+              }
             }
           )
         end
@@ -58,9 +78,7 @@ RSpec.describe "Add safebox item", type: %i[request database] do
 
         let(:Authorization) { "Bearer fake-token" }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
-        let(:safebox_item_params) do
-          {}
-        end
+        let(:safebox_item_params) { {} }
 
         before do
           Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id:)
@@ -102,9 +120,7 @@ RSpec.describe "Add safebox item", type: %i[request database] do
 
         let(:Authorization) { "Bearer it-does-not-matter" }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
-        let(:safebox_item_params) do
-          {}
-        end
+        let(:safebox_item_params) { {} }
 
         run_test! do |response|
           errors = JSON.parse(response.body)
@@ -114,7 +130,7 @@ RSpec.describe "Add safebox item", type: %i[request database] do
               "errors" => [
                 {
                   "title" => "Record not found",
-                  "detail" => "Record with ID #{id} does not exist",
+                  "detail" => "Safebox with ID #{id} does not exist",
                   "status" => "404"
                 }
               ]
@@ -129,9 +145,7 @@ RSpec.describe "Add safebox item", type: %i[request database] do
         let(:Accept) { "application/json" }
         let(:Authorization) { "Bearer it-does-not-matter" }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
-        let(:safebox_item_params) do
-          {}
-        end
+        let(:safebox_item_params) { {} }
 
         run_test! do |response|
           errors = JSON.parse(response.body)
@@ -159,9 +173,7 @@ RSpec.describe "Add safebox item", type: %i[request database] do
         let(:"Content-Type") { "application/json" }
         let(:Authorization) { "Bearer it-does-not-matter" }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
-        let(:safebox_item_params) do
-          {}
-        end
+        let(:safebox_item_params) { {} }
 
         run_test! do |response|
           errors = JSON.parse(response.body)
@@ -186,10 +198,16 @@ RSpec.describe "Add safebox item", type: %i[request database] do
       response "422", "Malformed expected data" do
         schema "$ref" => "#/components/schemas/api_error"
 
-        let(:Authorization) { "Bearer it-does-not-matter" }
+        let(:Authorization) { "Bearer #{token}" }
+        let(:token) { Safeboxes::Safeboxes::Infrastructure::Utils.generate_token(id, password) }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
+        let(:password) { "secret" }
         let(:safebox_item_params) do
-          {}
+          Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.build_params(safebox_id: id, id: "uuid")
+        end
+
+        before do
+          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
         end
 
         run_test! do |response|
@@ -217,9 +235,7 @@ RSpec.describe "Add safebox item", type: %i[request database] do
 
         let(:Authorization) { "Bearer it-does-not-matter" }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
-        let(:safebox_item_params) do
-          {}
-        end
+        let(:safebox_item_params) { {} }
 
         before do
           Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(:locked, id:)
@@ -247,8 +263,11 @@ RSpec.describe "Add safebox item", type: %i[request database] do
 
         let(:Authorization) { "Bearer it-does-not-matter" }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
-        let(:safebox_item_params) do
-          {}
+        let(:safebox_item_params) { {} }
+
+        before do
+          allow(Safeboxes::Safeboxes::Infrastructure::AddSafeboxItemInput).to receive(:new)
+            .and_raise(ArgumentError, "missing required argument")
         end
 
         run_test! do |response|
@@ -256,7 +275,14 @@ RSpec.describe "Add safebox item", type: %i[request database] do
 
           expect(errors).to match(
             {
-              "errors" => []
+              "errors" => [
+                {
+                  "title" => "Internal server error",
+                  "detail" => "Internal server error: missing required argument",
+                  "status" => "500",
+                  "meta" => Hash
+                }
+              ]
             }
           )
         end

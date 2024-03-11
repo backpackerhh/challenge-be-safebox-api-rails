@@ -18,17 +18,11 @@ RSpec.describe "List safebox items", type: %i[request database] do
                 example: "f626c808-648c-41fe-865d-c6062f3e0899"
       security [bearerAuth: []]
 
-      def generate_token(id, password)
-        repository = Safeboxes::Safeboxes::Infrastructure::PostgresSafeboxRepository.new
-        token = repository.enable_opening_with_generated_token(id, password)
-
-        token.id.value
-      end
-
       response "200", "Safebox contents successfully retrieved" do
         schema "$ref" => "#/components/schemas/safebox_items"
 
-        let(:Authorization) { "Bearer #{generate_token(id, password)}" }
+        let(:Authorization) { "Bearer #{token}" }
+        let(:token) { Safeboxes::Safeboxes::Infrastructure::Utils.generate_token(id, password) }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
         let(:password) { "secret" }
 
@@ -156,7 +150,7 @@ RSpec.describe "List safebox items", type: %i[request database] do
               "errors" => [
                 {
                   "title" => "Record not found",
-                  "detail" => "Record with ID #{id} does not exist",
+                  "detail" => "Safebox with ID #{id} does not exist",
                   "status" => "404"
                 }
               ]

@@ -35,7 +35,7 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                "$ref": "#/components/schemas/safebox_items"
+                "$ref": "#/components/schemas/new_safebox_item"
         '401':
           description: Invalid token provided to retrieve safebox items
           headers:
@@ -438,6 +438,59 @@ components:
             - type
             - attributes
             - relationships
+      required:
+      - data
+    new_safebox_item:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: f626c808-648c-41fe-865d-c6062f3e0899
+              pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            type:
+              type: string
+              example: safeboxItem
+            attributes:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Item 01
+              required:
+              - name
+            relationships:
+              type: object
+              properties:
+                safebox:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          example: f1e0ca7c-4972-4383-a538-cd6ad52aa08f
+                          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                        type:
+                          type: string
+                          example: safebox
+                      required:
+                      - id
+                      - type
+                  required:
+                  - data
+              required:
+              - safebox
+          required:
+          - id
+          - type
+          - attributes
+          - relationships
       required:
       - data
     api_error:
