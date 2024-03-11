@@ -72,44 +72,42 @@ RSpec.describe Safeboxes::Safeboxes::Infrastructure::PostgresSafeboxRepository, 
       end
     end
 
-    context "when safebox is found" do
-      context "when password is not valid" do
-        it "increments failed opening attempts" do
-          repository = described_class.new
-          safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(
-            password: "secret",
-            failed_opening_attempts: 0
-          )
+    context "when password is not valid" do
+      it "increments failed opening attempts" do
+        repository = described_class.new
+        safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(
+          password: "secret",
+          failed_opening_attempts: 0
+        )
 
-          repository.enable_opening_with_generated_token(safebox.id.value, "invalid")
+        repository.enable_opening_with_generated_token(safebox.id.value, "invalid")
 
-          found_safebox = repository.find_by_id(safebox.id.value)
+        found_safebox = repository.find_by_id(safebox.id.value)
 
-          expect(found_safebox.failed_opening_attempts.value).to eq(1)
-        end
-
-        it "returns nothing" do
-          repository = described_class.new
-          safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(
-            password: "secret",
-            failed_opening_attempts: 0
-          )
-
-          output = repository.enable_opening_with_generated_token(safebox.id.value, "invalid")
-
-          expect(output).to be_nil
-        end
+        expect(found_safebox.failed_opening_attempts.value).to eq(1)
       end
 
-      context "when password is valid" do
-        it "returns generated token" do
-          repository = described_class.new
-          safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(password: "secret")
+      it "returns nothing" do
+        repository = described_class.new
+        safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(
+          password: "secret",
+          failed_opening_attempts: 0
+        )
 
-          output = repository.enable_opening_with_generated_token(safebox.id.value, "secret")
+        output = repository.enable_opening_with_generated_token(safebox.id.value, "invalid")
 
-          expect(output).to be_a(Safeboxes::Safeboxes::Domain::SafeboxTokenEntity)
-        end
+        expect(output).to be_nil
+      end
+    end
+
+    context "when password is valid" do
+      it "returns generated token" do
+        repository = described_class.new
+        safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(password: "secret")
+
+        output = repository.enable_opening_with_generated_token(safebox.id.value, "secret")
+
+        expect(output).to be_a(Safeboxes::Safeboxes::Domain::SafeboxTokenEntity)
       end
     end
   end

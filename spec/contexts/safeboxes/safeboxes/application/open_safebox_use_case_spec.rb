@@ -21,33 +21,31 @@ RSpec.describe Safeboxes::Safeboxes::Application::OpenSafeboxUseCase, type: :use
       end
     end
 
-    context "with a non-locked safebox" do
-      context "when password is not valid" do
-        it "raises an exception" do
-          allow(repository).to receive(:find_by_id).with(id) do
-            Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build(id:)
-          end
-
-          allow(repository).to receive(:enable_opening_with_generated_token).with(id, password).and_return(nil)
-
-          expect do
-            described_class.new(repository:).open(input:)
-          end.to raise_error(Safeboxes::Safeboxes::Domain::Errors::InvalidSafeboxPasswordError)
+    context "when password is not valid" do
+      it "raises an exception" do
+        allow(repository).to receive(:find_by_id).with(id) do
+          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build(id:)
         end
+
+        allow(repository).to receive(:enable_opening_with_generated_token).with(id, password).and_return(nil)
+
+        expect do
+          described_class.new(repository:).open(input:)
+        end.to raise_error(Safeboxes::Safeboxes::Domain::Errors::InvalidSafeboxPasswordError)
       end
+    end
 
-      context "when password is valid" do
-        it "returns generated token" do
-          allow(repository).to receive(:find_by_id).with(id) do
-            Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build(id:)
-          end
-
-          allow(repository).to receive(:enable_opening_with_generated_token).with(id, password).and_return("token")
-
-          result = described_class.new(repository:).open(input:)
-
-          expect(result.safebox_token).to eq("token")
+    context "when password is valid" do
+      it "returns generated token" do
+        allow(repository).to receive(:find_by_id).with(id) do
+          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build(id:)
         end
+
+        allow(repository).to receive(:enable_opening_with_generated_token).with(id, password).and_return("token")
+
+        result = described_class.new(repository:).open(input:)
+
+        expect(result.safebox_token).to eq("token")
       end
     end
   end

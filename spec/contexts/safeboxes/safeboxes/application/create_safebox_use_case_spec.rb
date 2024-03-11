@@ -21,7 +21,6 @@ RSpec.describe Safeboxes::Safeboxes::Application::CreateSafeboxUseCase, type: :u
           errors: [],
           data: attributes
         )
-        use_case = described_class.new(repository:)
 
         expect(repository).to receive(:create).with(
           {
@@ -31,7 +30,7 @@ RSpec.describe Safeboxes::Safeboxes::Application::CreateSafeboxUseCase, type: :u
           }
         )
 
-        use_case.create(input:)
+        described_class.new(repository:).create(input:)
       end
 
       it "returns safebox" do
@@ -95,10 +94,9 @@ RSpec.describe Safeboxes::Safeboxes::Application::CreateSafeboxUseCase, type: :u
           errors: [],
           data: attributes.merge(id: "uuid")
         )
-        use_case = described_class.new(repository:)
 
         expect do
-          use_case.create(input:)
+          described_class.new(repository:).create(input:)
         end.to raise_error(Shared::Domain::Errors::InvalidArgumentError)
       end
 
@@ -109,10 +107,9 @@ RSpec.describe Safeboxes::Safeboxes::Application::CreateSafeboxUseCase, type: :u
           errors: [],
           data: attributes.merge(name: Safeboxes::Safeboxes::Domain::SafeboxNameValueObjectFactory.too_short)
         )
-        use_case = described_class.new(repository:)
 
         expect do
-          use_case.create(input:)
+          described_class.new(repository:).create(input:)
         end.to raise_error(Shared::Domain::Errors::InvalidArgumentError)
       end
 
@@ -123,10 +120,9 @@ RSpec.describe Safeboxes::Safeboxes::Application::CreateSafeboxUseCase, type: :u
           errors: [],
           data: attributes.merge(name: Safeboxes::Safeboxes::Domain::SafeboxNameValueObjectFactory.too_long)
         )
-        use_case = described_class.new(repository:)
 
         expect do
-          use_case.create(input:)
+          described_class.new(repository:).create(input:)
         end.to raise_error(Shared::Domain::Errors::InvalidArgumentError)
       end
 
@@ -137,10 +133,9 @@ RSpec.describe Safeboxes::Safeboxes::Application::CreateSafeboxUseCase, type: :u
           errors: [],
           data: attributes.merge(password: Safeboxes::Safeboxes::Domain::SafeboxPasswordValueObjectFactory.too_short)
         )
-        use_case = described_class.new(repository:)
 
         expect do
-          use_case.create(input:)
+          described_class.new(repository:).create(input:)
         end.to raise_error(Shared::Domain::Errors::InvalidArgumentError)
       end
 
@@ -151,10 +146,9 @@ RSpec.describe Safeboxes::Safeboxes::Application::CreateSafeboxUseCase, type: :u
           errors: [],
           data: attributes.merge(password: Safeboxes::Safeboxes::Domain::SafeboxPasswordValueObjectFactory.too_long)
         )
-        use_case = described_class.new(repository:)
 
         expect do
-          use_case.create(input:)
+          described_class.new(repository:).create(input:)
         end.to raise_error(Shared::Domain::Errors::InvalidArgumentError)
       end
     end
