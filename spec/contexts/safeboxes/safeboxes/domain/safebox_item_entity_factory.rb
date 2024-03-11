@@ -14,14 +14,18 @@ module Safeboxes
           end
         end
 
+        def self.attributes(...)
+          FactoryBot.attributes_for(:safeboxes_safeboxes_safebox_item, ...)
+        end
+
         def self.build(...)
-          attributes = FactoryBot.attributes_for(:safeboxes_safeboxes_safebox_item, ...)
+          attributes = attributes(...)
 
           SafeboxItemEntity.from_primitives(attributes)
         end
 
         def self.create(...)
-          attributes = FactoryBot.attributes_for(:safeboxes_safeboxes_safebox_item, ...)
+          attributes = attributes(...)
 
           FactoryBot.create(:safeboxes_safeboxes_safebox_item, attributes)
 

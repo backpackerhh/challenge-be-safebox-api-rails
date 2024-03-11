@@ -17,11 +17,27 @@ module Safeboxes
         end
 
         def find_by_id(id)
-          # TODO
+          safebox_item_record = SafeboxItemRecord.find(id)
+
+          Domain::SafeboxItemEntity.from_primitives(
+            id: safebox_item_record.id,
+            name: safebox_item_record.name,
+            safebox_id: safebox_item_record.safebox_id
+          )
+        rescue ActiveRecord::RecordNotFound
+          raise Shared::Infrastructure::Errors::RecordNotFoundError, id
         end
 
         def create(attributes)
-          # TODO
+          SafeboxItemRecord.create!(attributes)
+        rescue ActiveRecord::RecordNotUnique
+          raise Shared::Infrastructure::Errors::DuplicatedRecordError, attributes[:id]
+        rescue ActiveRecord::RecordInvalid, ActiveRecord::NotNullViolation => e
+          raise Shared::Domain::Errors::InvalidArgumentError, e
+        end
+
+        def size
+          SafeboxItemRecord.count
         end
       end
     end

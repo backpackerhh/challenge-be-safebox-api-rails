@@ -31,9 +31,9 @@ module Safeboxes
         def self.create(...)
           attributes = attributes(...)
 
-          FactoryBot.create(:safeboxes_safeboxes_new_safebox, **attributes)
+          FactoryBot.create(:safeboxes_safeboxes_new_safebox, attributes)
 
-          NewSafeboxEntity.from_primitives(**attributes)
+          NewSafeboxEntity.from_primitives(attributes)
         end
       end
     end
