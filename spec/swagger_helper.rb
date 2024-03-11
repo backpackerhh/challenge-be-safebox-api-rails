@@ -39,6 +39,7 @@ RSpec.configure do |config|
           safebox: Shared::Infrastructure::SchemaValidator.load_schema("safebox"),
           safebox_token: Shared::Infrastructure::SchemaValidator.load_schema("safebox_token"),
           safebox_items: Shared::Infrastructure::SchemaValidator.load_schema("safebox_items"),
+          new_safebox_item: Shared::Infrastructure::SchemaValidator.load_schema("new_safebox_item"),
           api_error: Shared::Infrastructure::SchemaValidator.load_schema("api_error")
         }
       },

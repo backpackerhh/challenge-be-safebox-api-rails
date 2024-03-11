@@ -5,43 +5,57 @@ info:
   version: 1.0.0
   title: SafeIsh API
 paths:
-  "/api/v1/safeboxes":
+  "/api/v1/safeboxes/{id}/items":
     post:
-      summary: Creates a safebox
+      summary: Adds an item to a safebox
       tags:
       - Safeboxes
-      operationId: createSafebox
-      description: Creates a new safebox based on a UUID, a non-empty name and a password.
-      parameters: []
+      operationId: addSafeboxItem
+      description: Inserts new contents in the safebox identified by the given ID
+        and opening token.
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+        description: Safebox ID
+        required: true
+        example: f626c808-648c-41fe-865d-c6062f3e0899
+      security:
+      - bearerAuth: []
       responses:
         '201':
-          description: Safebox successfully created
+          description: Safebox content successfully added
           links:
-            open:
-              operationId: openSafebox
-              parameters:
-                path.id: "$request.body#/data/id"
-                header.X-SafeIsh-Password: "$request.body#/data/attributes/password"
             getItems:
               operationId: getSafeboxItems
               parameters:
-                path.id: "$request.body#/data/id"
-            addItem:
-              operationId: addSafeboxItem
-              parameters:
-                path.id: "$request.body#/data/id"
+                path.id: "$request.path#/id"
+                header.Authorization: "$request.header.Authorization"
           content:
             application/vnd.api+json:
               schema:
-                "$ref": "#/components/schemas/safebox"
-        '406':
-          description: Not acceptable media type
+                "$ref": "#/components/schemas/safebox_items"
+        '401':
+          description: Invalid token provided to retrieve safebox items
+          headers:
+            WWW-Authenticate:
+              schema:
+                type: string
+                description: Indicates what authentication schemes can be used to
+                  access the resource.
           content:
             application/vnd.api+json:
               schema:
                 "$ref": "#/components/schemas/api_error"
-        '409':
-          description: Safebox already exists
+        '404':
+          description: Safebox not found
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '406':
+          description: Not acceptable media type
           content:
             application/vnd.api+json:
               schema:
@@ -58,6 +72,12 @@ paths:
             application/vnd.api+json:
               schema:
                 "$ref": "#/components/schemas/api_error"
+        '423':
+          description: Safebox is locked
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
         '500':
           description: Unexpected API error
           content:
@@ -68,8 +88,7 @@ paths:
         content:
           application/vnd.api+json:
             schema:
-              "$ref": "#/components/schemas/new_safebox"
-  "/api/v1/safeboxes/{id}/items":
+              "$ref": "#/components/schemas/new_safebox_item"
     get:
       summary: Retrieves the content of a safebox
       tags:
@@ -142,6 +161,70 @@ paths:
             application/vnd.api+json:
               schema:
                 "$ref": "#/components/schemas/api_error"
+  "/api/v1/safeboxes":
+    post:
+      summary: Creates a safebox
+      tags:
+      - Safeboxes
+      operationId: createSafebox
+      description: Creates a new safebox based on a UUID, a non-empty name and a password.
+      parameters: []
+      responses:
+        '201':
+          description: Safebox successfully created
+          links:
+            open:
+              operationId: openSafebox
+              parameters:
+                path.id: "$request.body#/data/id"
+                header.X-SafeIsh-Password: "$request.body#/data/attributes/password"
+            getItems:
+              operationId: getSafeboxItems
+              parameters:
+                path.id: "$request.body#/data/id"
+            addItem:
+              operationId: addSafeboxItem
+              parameters:
+                path.id: "$request.body#/data/id"
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/safebox"
+        '406':
+          description: Not acceptable media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '409':
+          description: Safebox already exists
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '415':
+          description: Unsupported media type
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '422':
+          description: Malformed expected data
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+        '500':
+          description: Unexpected API error
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              "$ref": "#/components/schemas/new_safebox"
   "/api/v1/safeboxes/{id}/open":
     post:
       summary: Opens a safebox

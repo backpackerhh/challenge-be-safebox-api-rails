@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       post "safeboxes", to: "safe_ish/safeboxes/api/v1/create_safebox#create"
       post "safeboxes/:id/open", to: "safe_ish/safeboxes/api/v1/open_safebox#create"
       get "safeboxes/:id/items", to: "safe_ish/safeboxes/api/v1/list_safebox_items#index"
+      post "safeboxes/:id/items", to: "safe_ish/safeboxes/api/v1/add_safebox_item#create"
     end
   end
 end
