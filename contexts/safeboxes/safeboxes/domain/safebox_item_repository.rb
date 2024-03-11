@@ -6,7 +6,7 @@ module Safeboxes
   module Safeboxes
     module Domain
       module SafeboxItemRepository
-        Interface = Dry.Types.Interface(:all)
+        Interface = Dry.Types.Interface(:all, :find_by_id, :create)
       end
     end
   end

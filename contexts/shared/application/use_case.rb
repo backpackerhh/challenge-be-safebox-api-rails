@@ -7,14 +7,6 @@ module Shared
     class UseCase < Dry::Struct
       transform_keys(&:to_sym)
 
-      def self.result_class
-        @result_class ||= Result.with_members(:empty)
-      end
-
-      def self.result(*)
-        @result_class = Result.with_members(*)
-      end
-
       # @see https://github.com/dry-rb/dry-struct/blob/release-1.6/lib/dry/struct/class_interface.rb#L249
       def self.new(*)
         super
@@ -26,6 +18,14 @@ module Shared
         attribute :repository, type # order matters here
 
         include SafeIsh::Deps[repository: dependency_key]
+      end
+
+      def self.result_class
+        @result_class ||= Result.with_members(:empty)
+      end
+
+      def self.result(*)
+        @result_class = Result.with_members(*)
       end
 
       def initialize(*)

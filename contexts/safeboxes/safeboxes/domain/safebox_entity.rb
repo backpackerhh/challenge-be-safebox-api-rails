@@ -29,6 +29,14 @@ module Safeboxes
           domain_service.load(safebox_id: id.value) # Lazy loaded
         end
 
+        def add_item(data, domain_service = AddSafeboxItemService.new)
+          domain_service.add(data)
+        end
+
+        def item(id, domain_service = FindSafeboxItemService.new)
+          domain_service.find(id)
+        end
+
         def to_primitives
           {
             id: id.value,

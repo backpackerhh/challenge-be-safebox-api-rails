@@ -34,11 +34,15 @@ Metrics/ParameterLists:
 
 Metrics/MethodLength:
   Enabled: true
-  CountAsOne: ["array", "heredoc", "method_call"]
+  CountAsOne: ["array", "hash", "heredoc", "method_call"]
+  Exclude:
+    - "contexts/safeboxes/safeboxes/application/add_safebox_item_use_case.rb"
 
 Metrics/AbcSize:
   Enabled: true
   CountRepeatedAttributes: false
+  Exclude:
+    - "contexts/safeboxes/safeboxes/application/add_safebox_item_use_case.rb"
 
 # Rails
 

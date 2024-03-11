@@ -15,6 +15,14 @@ module Safeboxes
             )
           end
         end
+
+        def find_by_id(id)
+          # TODO
+        end
+
+        def create(attributes)
+          # TODO
+        end
       end
     end
   end
