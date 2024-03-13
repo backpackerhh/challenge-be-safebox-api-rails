@@ -19,6 +19,10 @@ module SafeIsh
           JSON.parse(request.body.read)
         end
 
+        def query_params
+          params.permit(:sort).to_hash.deep_symbolize_keys
+        end
+
         def successful_response(data, status: :ok)
           render json: data, status:
         end

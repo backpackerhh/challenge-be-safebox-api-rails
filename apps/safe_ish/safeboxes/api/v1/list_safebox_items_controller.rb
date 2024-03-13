@@ -7,6 +7,7 @@ module SafeIsh
         class ListSafeboxItemsController < ApplicationController
           def index
             input = ::Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput.new(
+              query_params:,
               id: params[:id],
               token: extract_token_from_auth_header
             )
@@ -17,6 +18,10 @@ module SafeIsh
                 ::Safeboxes::Safeboxes::Infrastructure::SafeboxItemSerializer.new(safebox_items),
                 status: :ok
               )
+            end
+
+            result.on_failure do |errors|
+              failed_response(errors, status: :bad_request)
             end
           end
         end

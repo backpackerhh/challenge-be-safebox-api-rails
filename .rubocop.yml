@@ -37,12 +37,21 @@ Metrics/MethodLength:
   CountAsOne: ["array", "hash", "heredoc", "method_call"]
   Exclude:
     - "contexts/safeboxes/safeboxes/application/add_safebox_item_use_case.rb"
+    - "contexts/safeboxes/safeboxes/application/list_safebox_items_use_case.rb"
 
 Metrics/AbcSize:
   Enabled: true
   CountRepeatedAttributes: false
   Exclude:
     - "contexts/safeboxes/safeboxes/application/add_safebox_item_use_case.rb"
+    - "contexts/safeboxes/safeboxes/application/list_safebox_items_use_case.rb"
+
+# Performance
+
+Performance/Sum:
+  Enabled: true
+  Exclude:
+    - "contexts/shared/infrastructure/collection_input.rb"
 
 # Rails
 

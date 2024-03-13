@@ -16,6 +16,15 @@ RSpec.describe "List safebox items", type: %i[request database] do
                 description: "Safebox ID",
                 required: true,
                 example: "f626c808-648c-41fe-865d-c6062f3e0899"
+      parameter name: :sort,
+                in: :query,
+                schema: { type: :string },
+                explode: false,
+                required: false,
+                description: "Comma-separated sorting fields: " \
+                             "#{Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput.sortable_fields
+                                                                                           .join(', ')
+                                                                                           .camelize(:lower)}"
       security [bearerAuth: []]
 
       response "200", "Safebox contents successfully retrieved" do
@@ -87,6 +96,33 @@ RSpec.describe "List safebox items", type: %i[request database] do
                         "type" => "safebox"
                       }
                     }
+                  }
+                }
+              ]
+            }
+          )
+        end
+      end
+
+      response "400", "Invalid parameters" do
+        schema "$ref" => "#/components/schemas/api_error"
+
+        let(:Authorization) { "Bearer it-does-not-matter" }
+        let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
+        let(:sort) { "invalidParameter" }
+
+        run_test! do |response|
+          errors = JSON.parse(response.body)
+
+          expect(errors).to eq(
+            {
+              "errors" => [
+                {
+                  "title" => "Invalid sorting parameter",
+                  "detail" => "Invalid sorting parameter: invalid_parameter",
+                  "status" => "400",
+                  "source" => {
+                    "parameter" => "sort[invalid_parameter]"
                   }
                 }
               ]

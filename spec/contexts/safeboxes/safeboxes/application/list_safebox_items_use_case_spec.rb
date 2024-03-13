@@ -7,10 +7,43 @@ RSpec.describe Safeboxes::Safeboxes::Application::ListSafeboxItemsUseCase, type:
     let(:repository) { Safeboxes::Safeboxes::Infrastructure::InMemorySafeboxRepository.new }
     let(:id) { SecureRandom.uuid }
     let(:token) { "token" }
-    let(:input) { instance_double(Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput, id:, token:) }
+    let(:query_params) { { sort: "-createdAt" } }
+
+    context "with an invalid input" do
+      it "does not return any safebox items" do
+        input = instance_double(
+          Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput,
+          invalid?: true,
+          errors: ["<error>"]
+        )
+
+        result = described_class.new(repository:).retrieve_all(input:)
+
+        expect(result.safebox_items).to be_nil
+      end
+
+      it "returns found errors" do
+        input = instance_double(
+          Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput,
+          invalid?: true,
+          errors: ["<error>"]
+        )
+
+        result = described_class.new(repository:).retrieve_all(input:)
+
+        expect(result.errors).to eq(["<error>"])
+      end
+    end
 
     context "with a locked safebox" do
       it "raises an exception" do
+        input = instance_double(
+          Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput,
+          invalid?: false,
+          errors: [],
+          id:
+        )
+
         allow(repository).to receive(:find_by_id).with(id) do
           Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build(:locked, id:)
         end
@@ -23,6 +56,14 @@ RSpec.describe Safeboxes::Safeboxes::Application::ListSafeboxItemsUseCase, type:
 
     context "when token is not valid" do
       it "raises an exception" do
+        input = instance_double(
+          Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput,
+          invalid?: false,
+          errors: [],
+          id:,
+          token:
+        )
+
         allow(repository).to receive(:find_by_id).with(id) do
           Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build(id:)
         end
@@ -37,6 +78,14 @@ RSpec.describe Safeboxes::Safeboxes::Application::ListSafeboxItemsUseCase, type:
 
     context "when token is valid" do
       it "returns all items included in the safebox" do
+        input = instance_double(
+          Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput,
+          invalid?: false,
+          errors: [],
+          id:,
+          token:,
+          query_params:
+        )
         safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build(id:)
         safebox_items = [
           Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.build(safebox_id: safebox.id.value),
@@ -49,13 +98,43 @@ RSpec.describe Safeboxes::Safeboxes::Application::ListSafeboxItemsUseCase, type:
 
         allow(repository).to receive(:valid_token?).with(token).and_return(true)
 
-        allow(safebox).to receive(:items) do
+        allow(safebox).to receive(:items).with(query_params) do
           safebox_items
         end
 
         result = described_class.new(repository:).retrieve_all(input:)
 
         expect(result.safebox_items).to eq(safebox_items)
+      end
+
+      it "returns empty errors" do
+        input = instance_double(
+          Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput,
+          invalid?: false,
+          errors: [],
+          id:,
+          token:,
+          query_params:
+        )
+        safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build(id:)
+        safebox_items = [
+          Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.build(safebox_id: safebox.id.value),
+          Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.build(safebox_id: safebox.id.value)
+        ]
+
+        allow(repository).to receive(:find_by_id).with(id) do
+          safebox
+        end
+
+        allow(repository).to receive(:valid_token?).with(token).and_return(true)
+
+        allow(safebox).to receive(:items).with(query_params) do
+          safebox_items
+        end
+
+        result = described_class.new(repository:).retrieve_all(input:)
+
+        expect(result.errors).to eq([])
       end
     end
   end

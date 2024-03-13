@@ -6,8 +6,8 @@ module Safeboxes
       class LoadSafeboxItemsService < Shared::Domain::Service
         repository "safeboxes.safeboxes.safebox_item_repository", Domain::SafeboxItemRepository::Interface
 
-        def load(safebox_id:)
-          repository.all(safebox_id)
+        def load(safebox_id:, params:)
+          repository.all(safebox_id, params)
         end
       end
     end

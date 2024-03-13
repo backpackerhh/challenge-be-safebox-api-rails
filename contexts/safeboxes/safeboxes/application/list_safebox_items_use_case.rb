@@ -8,6 +8,10 @@ module Safeboxes
         result :safebox_items
 
         def retrieve_all(input:)
+          if input.invalid?
+            return result.failure(input.errors)
+          end
+
           safebox = repository.find_by_id(input.id)
 
           if safebox.locked?
@@ -18,7 +22,9 @@ module Safeboxes
             raise Domain::Errors::InvalidSafeboxTokenError, safebox.id.value
           end
 
-          result.success(safebox_items: safebox.items)
+          safebox_items = safebox.items(input.query_params)
+
+          result.success(safebox_items:)
         end
       end
     end

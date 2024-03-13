@@ -104,6 +104,13 @@ paths:
         description: Safebox ID
         required: true
         example: f626c808-648c-41fe-865d-c6062f3e0899
+      - name: sort
+        in: query
+        schema:
+          type: string
+        explode: false
+        required: false
+        description: 'Comma-separated sorting fields: name, createdAt'
       security:
       - bearerAuth: []
       responses:
@@ -119,6 +126,12 @@ paths:
             application/vnd.api+json:
               schema:
                 "$ref": "#/components/schemas/safebox_items"
+        '400':
+          description: Invalid parameters
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "#/components/schemas/api_error"
         '401':
           description: Invalid token provided to retrieve safebox items
           headers:

@@ -4,8 +4,11 @@ module Safeboxes
   module Safeboxes
     module Infrastructure
       class PostgresSafeboxItemRepository
-        def all(safebox_id)
-          safebox_items = SafeboxItemRecord.where(safebox_id:).order(:created_at)
+        def all(safebox_id, params)
+          safebox_items = Shared::Infrastructure::ParametizableQuery.new.run(
+            SafeboxItemRecord.where(safebox_id:),
+            **params
+          )
 
           safebox_items.map do |safebox_item|
             Domain::SafeboxItemEntity.from_primitives(

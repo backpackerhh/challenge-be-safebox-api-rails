@@ -3,24 +3,54 @@
 require "rails_helper"
 
 RSpec.describe Safeboxes::Safeboxes::Infrastructure::PostgresSafeboxItemRepository, type: %i[repository database] do
-  describe "#all(safebox_id)" do
-    it "returns empty array without any safebox items for given safebox" do
+  describe "#all(safebox_id, params)" do
+    it "returns empty array without any items associated to given safebox" do
       repository = described_class.new
 
-      result = repository.all("baa7a07f-d972-4cfe-88b5-248c87c51d78")
+      result = repository.all("baa7a07f-d972-4cfe-88b5-248c87c51d78", {})
 
       expect(result).to eq([])
     end
 
-    it "returns an entity for each safebox item associated to given safebox" do
+    it "returns an entity for each item associated to given safebox" do
       repository = described_class.new
       safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create
       safebox_item_a = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(safebox_id: safebox.id.value)
       safebox_item_b = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(safebox_id: safebox.id.value)
 
-      result = repository.all(safebox.id.value)
+      result = repository.all(safebox.id.value, {})
 
       expect(result).to eq([safebox_item_a, safebox_item_b])
+    end
+
+    context "with sorting" do
+      it "returns an entity for each item associated to given safebox sorted by creation date in descending order" do
+        repository = described_class.new
+        safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create
+        safebox_item_a = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(safebox_id: safebox.id.value)
+        safebox_item_b = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(safebox_id: safebox.id.value)
+
+        result = repository.all(safebox.id.value, sorting_params: { created_at: :desc })
+
+        expect(result).to eq([safebox_item_b, safebox_item_a])
+      end
+
+      it "returns an entity for each item associated to given safebox sorted by name in ascending order" do
+        repository = described_class.new
+        safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create
+        safebox_item_a = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(
+          safebox_id: safebox.id.value,
+          name: "A"
+        )
+        safebox_item_b = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(
+          safebox_id: safebox.id.value,
+          name: "B"
+        )
+
+        result = repository.all(safebox.id.value, sorting_params: { name: :asc })
+
+        expect(result).to eq([safebox_item_a, safebox_item_b])
+      end
     end
   end
 
