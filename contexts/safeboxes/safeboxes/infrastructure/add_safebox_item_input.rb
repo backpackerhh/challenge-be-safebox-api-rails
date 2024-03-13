@@ -3,7 +3,7 @@
 module Safeboxes
   module Safeboxes
     module Infrastructure
-      class AddSafeboxItemInput < Shared::Infrastructure::Input
+      class AddSafeboxItemInput < Shared::Infrastructure::DataInput
         attr_reader :safebox_id, :token
 
         def initialize(raw_data:, safebox_id:, token:)

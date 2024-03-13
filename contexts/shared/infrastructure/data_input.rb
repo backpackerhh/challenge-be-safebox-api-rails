@@ -2,7 +2,7 @@
 
 module Shared
   module Infrastructure
-    class Input
+    class DataInput
       attr_reader :raw_data
 
       def initialize(raw_data:)

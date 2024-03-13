@@ -3,7 +3,7 @@
 module Safeboxes
   module Safeboxes
     module Infrastructure
-      class CreateSafeboxInput < Shared::Infrastructure::Input
+      class CreateSafeboxInput < Shared::Infrastructure::DataInput
         def data
           {
             id: raw_data.dig("data", "id"),
