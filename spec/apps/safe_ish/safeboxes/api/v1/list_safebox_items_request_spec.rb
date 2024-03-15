@@ -98,7 +98,11 @@ RSpec.describe "List safebox items", type: %i[request database] do
                     }
                   }
                 }
-              ]
+              ],
+              "links" => {
+                "self" => Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsLink.build(id),
+                "addItem" => Safeboxes::Safeboxes::Infrastructure::Links::AddSafeboxItemLink.build(id)
+              }
             }
           )
         end

@@ -48,13 +48,25 @@ RSpec.describe "Create safebox", type: %i[request database] do
         run_test! do |response|
           data = JSON.parse(response.body)
 
-          expect(data).to eq(
+          expect(data).to match(
             {
               "data" => {
                 "id" => safebox_params.dig(:data, :id),
                 "type" => "safebox",
                 "attributes" => {
                   "name" => safebox_params.dig(:data, :attributes, :name)
+                },
+                "links" => {
+                  "self" => Safeboxes::Safeboxes::Infrastructure::Links::CreateSafeboxLink.build,
+                  "open" => Safeboxes::Safeboxes::Infrastructure::Links::OpenSafeboxLink.build(
+                    safebox_params.dig(:data, :id)
+                  ),
+                  "getItems" => Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsLink.build(
+                    safebox_params.dig(:data, :id)
+                  ),
+                  "addItem" => Safeboxes::Safeboxes::Infrastructure::Links::AddSafeboxItemLink.build(
+                    safebox_params.dig(:data, :id)
+                  )
                 }
               }
             }

@@ -14,7 +14,12 @@ module SafeIsh
 
             result.on_success do |safebox_token|
               successful_response(
-                ::Safeboxes::Safeboxes::Infrastructure::SafeboxTokenSerializer.new(safebox_token),
+                ::Safeboxes::Safeboxes::Infrastructure::SafeboxTokenSerializer.new(
+                  safebox_token,
+                  params: {
+                    safebox_id: params[:id]
+                  }
+                ),
                 status: :ok
               )
             end

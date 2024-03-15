@@ -15,7 +15,10 @@ module SafeIsh
 
             result.on_success do |safebox_item|
               successful_response(
-                ::Safeboxes::Safeboxes::Infrastructure::SafeboxItemSerializer.new(safebox_item),
+                ::Safeboxes::Safeboxes::Infrastructure::SafeboxItemSerializer.new(
+                  safebox_item,
+                  params: { safebox_id: params[:id] }
+                ),
                 status: :created
               )
             end

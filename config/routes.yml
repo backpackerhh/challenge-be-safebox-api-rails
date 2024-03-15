@@ -1,0 +1,11 @@
+production:
+  default_url_options:
+    host: <%= ENV["DEFAULT_URL_HOST"] %>
+
+development:
+  default_url_options:
+    host: "localhost:3000"
+
+test:
+  default_url_options:
+    host: "localhost:3000"

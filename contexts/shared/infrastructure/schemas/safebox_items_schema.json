@@ -55,7 +55,19 @@
         },
         "required": ["id", "type", "attributes", "relationships"]
       }
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "self": {
+          "$ref": "#/components/schemas/list_safebox_items_link"
+        },
+        "addItem": {
+          "$ref": "#/components/schemas/add_safebox_item_link"
+        }
+      },
+      "required": ["self"]
     }
   },
-  "required": ["data"]
+  "required": ["data", "links"]
 }

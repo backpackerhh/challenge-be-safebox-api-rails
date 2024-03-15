@@ -60,7 +60,12 @@ RSpec.describe "Open safebox", type: %i[request database] do
             {
               "data" => {
                 "id" => String,
-                "type" => "safeboxToken"
+                "type" => "safeboxToken",
+                "links" => {
+                  "self" => Safeboxes::Safeboxes::Infrastructure::Links::OpenSafeboxLink.build(id),
+                  "getItems" => Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsLink.build(id),
+                  "addItem" => Safeboxes::Safeboxes::Infrastructure::Links::AddSafeboxItemLink.build(id)
+                }
               }
             }
           )

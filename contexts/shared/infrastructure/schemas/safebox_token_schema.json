@@ -11,9 +11,24 @@
         "type": {
           "type": "string",
           "example": "safeboxToken"
+        },
+        "links": {
+          "type": "object",
+          "properties": {
+            "self": {
+              "$ref": "#/components/schemas/open_safebox_link"
+            },
+            "getItems": {
+              "$ref": "#/components/schemas/list_safebox_items_link"
+            },
+            "addItem": {
+              "$ref": "#/components/schemas/add_safebox_item_link"
+            }
+          },
+          "required": ["self"]
         }
       },
-      "required": ["id", "type"]
+      "required": ["id", "type", "links"]
     }
   },
   "required": ["data"]

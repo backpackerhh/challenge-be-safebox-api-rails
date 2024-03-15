@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "properties": {
+    "href": {
+      "type": "string",
+      "example": "https://www.example.com"
+    },
+    "title": {
+      "type": "string",
+      "example": "Get all items from a safebox"
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "example": "get"
+        }
+      },
+      "required": ["method"]
+    }
+  },
+  "required": ["href"]
+}

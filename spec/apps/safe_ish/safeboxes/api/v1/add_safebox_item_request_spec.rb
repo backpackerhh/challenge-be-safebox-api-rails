@@ -22,7 +22,7 @@ RSpec.describe "Add safebox item", type: %i[request database] do
       security [bearerAuth: []]
 
       response "201", "Safebox content successfully added" do
-        schema "$ref" => "#/components/schemas/new_safebox_item"
+        schema "$ref" => "#/components/schemas/safebox_item"
 
         let(:Authorization) { "Bearer #{token}" }
         let(:token) { Safeboxes::Safeboxes::Infrastructure::Utils.generate_token(id, password) }
@@ -66,6 +66,10 @@ RSpec.describe "Add safebox item", type: %i[request database] do
                       "type" => "safebox"
                     }
                   }
+                },
+                "links" => {
+                  "self" => Safeboxes::Safeboxes::Infrastructure::Links::AddSafeboxItemLink.build(id),
+                  "getItems" => Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsLink.build(id)
                 }
               }
             }

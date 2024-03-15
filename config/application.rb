@@ -33,5 +33,8 @@ module SafeIsh
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    # Routes
+    Rails.application.routes.default_url_options[:host] = config_for(:routes).dig(:default_url_options, :host)
   end
 end

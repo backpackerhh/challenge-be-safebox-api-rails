@@ -15,7 +15,13 @@ module SafeIsh
 
             result.on_success do |safebox_items|
               successful_response(
-                ::Safeboxes::Safeboxes::Infrastructure::SafeboxItemSerializer.new(safebox_items),
+                ::Safeboxes::Safeboxes::Infrastructure::SafeboxItemCollectionSerializer.new(
+                  safebox_items,
+                  is_collection: true,
+                  links: ::Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsCollectionLinks.build(
+                    params[:id]
+                  )
+                ),
                 status: :ok
               )
             end

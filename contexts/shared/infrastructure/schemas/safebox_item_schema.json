@@ -1,0 +1,71 @@
+{
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "example": "f626c808-648c-41fe-865d-c6062f3e0899"
+        },
+        "type": {
+          "type": "string",
+          "example": "safeboxItem"
+        },
+        "attributes": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "Item 01"
+            }
+          },
+          "required": ["name"]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "safebox": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "f1e0ca7c-4972-4383-a538-cd6ad52aa08f",
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "safebox"
+                    }
+                  },
+                  "required": ["id", "type"]
+                }
+              },
+              "required": ["data"]
+            }
+          },
+          "required": ["safebox"]
+        },
+        "links": {
+          "type": "object",
+          "properties": {
+            "self": {
+              "$ref": "#/components/schemas/add_safebox_item_link"
+            },
+            "getItems": {
+              "$ref": "#/components/schemas/list_safebox_items_link"
+            }
+          },
+          "required": ["self"]
+        }
+      },
+      "required": ["id", "type", "attributes", "relationships", "links"]
+    }
+  },
+  "required": ["data"]
+}

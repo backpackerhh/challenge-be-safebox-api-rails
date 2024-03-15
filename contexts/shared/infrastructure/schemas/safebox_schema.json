@@ -22,9 +22,27 @@
             }
           },
           "required": ["name"]
+        },
+        "links": {
+          "type": "object",
+          "properties": {
+            "self": {
+              "$ref": "#/components/schemas/create_safebox_link"
+            },
+            "open": {
+              "$ref": "#/components/schemas/open_safebox_link"
+            },
+            "getItems": {
+              "$ref": "#/components/schemas/list_safebox_items_link"
+            },
+            "addItem": {
+              "$ref": "#/components/schemas/add_safebox_item_link"
+            }
+          },
+          "required": ["self"]
         }
       },
-      "required": ["id", "type", "attributes"]
+      "required": ["id", "type", "attributes", "links"]
     }
   },
   "required": ["data"]
