@@ -3,7 +3,7 @@
 module Shared
   module Domain
     class AggregateRoot < Aggregate
-      # NOTE: anything specific to aggregate roots but not to regular aggregates could be added here
+      # @note anything specific to aggregate roots but not to regular aggregates could be added here
     end
   end
 end
