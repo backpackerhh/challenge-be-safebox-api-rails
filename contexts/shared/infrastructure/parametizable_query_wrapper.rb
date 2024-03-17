@@ -14,6 +14,20 @@ module Shared
 
         self
       end
+
+      def paginate(pagination_params)
+        page_number = pagination_params.fetch(:number)
+        page_size = pagination_params.fetch(:size)
+
+        @relation = @relation.offset((page_number - 1) * page_size).limit(page_size)
+
+        self
+      end
+
+      # @note This solution won't work for grouped results, so some adaptation would be necessary
+      def count
+        @relation.count(:all)
+      end
     end
   end
 end

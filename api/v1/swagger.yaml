@@ -110,7 +110,21 @@ paths:
           type: string
         explode: false
         required: false
-        description: 'Comma-separated sorting fields: name, createdAt'
+        description: 'Comma-separated sorting fields: '
+      - name: page[number]
+        in: query
+        description: Page number
+        schema:
+          type: integer
+        example: 1
+        required: false
+      - name: page[size]
+        in: query
+        description: Number of elements per page
+        schema:
+          type: integer
+        example: 10
+        required: false
       security:
       - bearerAuth: []
       responses:
@@ -599,6 +613,14 @@ components:
               "$ref": "#/components/schemas/list_safebox_items_link"
             addItem:
               "$ref": "#/components/schemas/add_safebox_item_link"
+            first:
+              "$ref": "#/components/schemas/pagination_link"
+            next:
+              "$ref": "#/components/schemas/pagination_link"
+            prev:
+              "$ref": "#/components/schemas/pagination_link"
+            last:
+              "$ref": "#/components/schemas/pagination_link"
           required:
           - self
       required:
@@ -719,6 +741,12 @@ components:
           - method
       required:
       - href
+    pagination_link:
+      type:
+      - string
+      -
+      description: Pagination link or null
+      example: https://www.example.com?page[number]=1
 servers:
 - url: https://{defaultHost}
   variables:

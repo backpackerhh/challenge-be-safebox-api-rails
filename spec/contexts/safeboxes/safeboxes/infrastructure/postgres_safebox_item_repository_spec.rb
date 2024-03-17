@@ -4,12 +4,19 @@ require "rails_helper"
 
 RSpec.describe Safeboxes::Safeboxes::Infrastructure::PostgresSafeboxItemRepository, type: %i[repository database] do
   describe "#all(safebox_id, params)" do
+    let(:default_pagination_params) { { number: 1, size: 10 } }
+
     it "returns empty array without any items associated to given safebox" do
       repository = described_class.new
 
-      result = repository.all("baa7a07f-d972-4cfe-88b5-248c87c51d78", {})
+      data = repository.all("baa7a07f-d972-4cfe-88b5-248c87c51d78", pagination_params: default_pagination_params)
 
-      expect(result).to eq([])
+      expect(data).to eq(
+        {
+          results: [],
+          total_results_count: 0
+        }
+      )
     end
 
     it "returns an entity for each item associated to given safebox" do
@@ -18,39 +25,102 @@ RSpec.describe Safeboxes::Safeboxes::Infrastructure::PostgresSafeboxItemReposito
       safebox_item_a = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(safebox_id: safebox.id.value)
       safebox_item_b = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(safebox_id: safebox.id.value)
 
-      result = repository.all(safebox.id.value, {})
+      data = repository.all(safebox.id.value, pagination_params: default_pagination_params)
 
-      expect(result).to eq([safebox_item_a, safebox_item_b])
+      expect(data).to eq(
+        {
+          results: [safebox_item_a, safebox_item_b],
+          total_results_count: 2
+        }
+      )
     end
 
-    context "with sorting" do
-      it "returns an entity for each item associated to given safebox sorted by creation date in descending order" do
-        repository = described_class.new
-        safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create
-        safebox_item_a = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(safebox_id: safebox.id.value)
-        safebox_item_b = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(safebox_id: safebox.id.value)
+    it "returns entities sorted as expected" do
+      repository = described_class.new
+      safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create
+      safebox_item_a = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(
+        safebox_id: safebox.id.value,
+        name: "A"
+      )
+      safebox_item_b = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(
+        safebox_id: safebox.id.value,
+        name: "B"
+      )
 
-        result = repository.all(safebox.id.value, sorting_params: { created_at: :desc })
+      data = repository.all(
+        safebox.id.value,
+        pagination_params: default_pagination_params,
+        sorting_params: { created_at: :desc }
+      )
 
-        expect(result).to eq([safebox_item_b, safebox_item_a])
-      end
+      expect(data).to eq(
+        {
+          results: [safebox_item_b, safebox_item_a],
+          total_results_count: 2
+        }
+      )
 
-      it "returns an entity for each item associated to given safebox sorted by name in ascending order" do
-        repository = described_class.new
-        safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create
-        safebox_item_a = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(
-          safebox_id: safebox.id.value,
-          name: "A"
-        )
-        safebox_item_b = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(
-          safebox_id: safebox.id.value,
-          name: "B"
-        )
+      data = repository.all(
+        safebox.id.value,
+        pagination_params: default_pagination_params,
+        sorting_params: { name: :asc }
+      )
 
-        result = repository.all(safebox.id.value, sorting_params: { name: :asc })
+      expect(data).to eq(
+        {
+          results: [safebox_item_a, safebox_item_b],
+          total_results_count: 2
+        }
+      )
+    end
 
-        expect(result).to eq([safebox_item_a, safebox_item_b])
-      end
+    it "returns entities paginated as expected" do
+      repository = described_class.new
+      safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create
+      safebox_item_a = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(
+        safebox_id: safebox.id.value,
+        name: "A"
+      )
+      safebox_item_b = Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(
+        safebox_id: safebox.id.value,
+        name: "B"
+      )
+
+      data = repository.all(
+        safebox.id.value,
+        pagination_params: default_pagination_params.merge(size: 1)
+      )
+
+      expect(data).to eq(
+        {
+          results: [safebox_item_a],
+          total_results_count: 2
+        }
+      )
+
+      data = repository.all(
+        safebox.id.value,
+        pagination_params: default_pagination_params.merge(size: 1, number: 2)
+      )
+
+      expect(data).to eq(
+        {
+          results: [safebox_item_b],
+          total_results_count: 2
+        }
+      )
+
+      data = repository.all(
+        safebox.id.value,
+        pagination_params: default_pagination_params.merge(size: 1, number: 3)
+      )
+
+      expect(data).to eq(
+        {
+          results: [],
+          total_results_count: 2
+        }
+      )
     end
   end
 

@@ -92,3 +92,9 @@ RSpec/DescribeClass:
   Enabled: true
   Exclude:
     - "spec/apps/**/*_request_spec.rb"
+
+RSpec/MultipleExpectations:
+  Enabled: true
+  Exclude:
+    - "spec/contexts/**/*_use_case_spec.rb"
+    - "spec/contexts/**/*_repository_spec.rb"

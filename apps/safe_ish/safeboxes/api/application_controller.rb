@@ -20,7 +20,7 @@ module SafeIsh
         end
 
         def query_params
-          params.permit(:sort).to_hash.deep_symbolize_keys
+          params.permit(:sort, page: {}).to_hash.deep_symbolize_keys
         end
 
         def successful_response(data, status: :ok)

@@ -25,6 +25,18 @@ RSpec.describe "List safebox items", type: %i[request database] do
                              "#{Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput.sortable_fields
                                                                                            .join(', ')
                                                                                            .camelize(:lower)}"
+      parameter name: "page[number]",
+                in: :query,
+                description: "Page number",
+                schema: { type: :integer },
+                example: 1,
+                required: false
+      parameter name: "page[size]",
+                in: :query,
+                description: "Number of elements per page",
+                schema: { type: :integer },
+                example: 10,
+                required: false
       security [bearerAuth: []]
 
       response "200", "Safebox contents successfully retrieved" do
@@ -99,10 +111,11 @@ RSpec.describe "List safebox items", type: %i[request database] do
                   }
                 }
               ],
-              "links" => {
-                "self" => Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsLink.build(id),
-                "addItem" => Safeboxes::Safeboxes::Infrastructure::Links::AddSafeboxItemLink.build(id)
-              }
+              "links" => Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsCollectionLinks.build(
+                id,
+                {},
+                2
+              )
             }
           )
         end

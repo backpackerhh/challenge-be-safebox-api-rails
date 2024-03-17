@@ -5,18 +5,19 @@ module Safeboxes
     module Infrastructure
       class PostgresSafeboxItemRepository
         def all(safebox_id, params)
-          safebox_items = Shared::Infrastructure::ParametizableQuery.new.run(
+          data = Shared::Infrastructure::ParametizableQuery.new.run(
             SafeboxItemRecord.where(safebox_id:),
             **params
           )
-
-          safebox_items.map do |safebox_item|
+          entities = data[:results].map do |safebox_item|
             Domain::SafeboxItemEntity.from_primitives(
               id: safebox_item.id,
               name: safebox_item.name,
               safebox_id: safebox_item.safebox_id
             )
           end
+
+          data.merge(results: entities)
         end
 
         def find_by_id(id)

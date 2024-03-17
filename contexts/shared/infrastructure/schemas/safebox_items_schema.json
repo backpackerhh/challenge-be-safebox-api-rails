@@ -64,6 +64,18 @@
         },
         "addItem": {
           "$ref": "#/components/schemas/add_safebox_item_link"
+        },
+        "first": {
+          "$ref": "#/components/schemas/pagination_link"
+        },
+        "next": {
+          "$ref": "#/components/schemas/pagination_link"
+        },
+        "prev": {
+          "$ref": "#/components/schemas/pagination_link"
+        },
+        "last": {
+          "$ref": "#/components/schemas/pagination_link"
         }
       },
       "required": ["self"]

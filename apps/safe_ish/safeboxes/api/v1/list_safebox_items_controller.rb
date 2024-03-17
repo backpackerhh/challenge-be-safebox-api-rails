@@ -13,13 +13,15 @@ module SafeIsh
             )
             result = ::Safeboxes::Safeboxes::Application::ListSafeboxItemsUseCase.new.retrieve_all(input:)
 
-            result.on_success do |safebox_items|
+            result.on_success do |safebox_items, total_safebox_items|
               successful_response(
                 ::Safeboxes::Safeboxes::Infrastructure::SafeboxItemCollectionSerializer.new(
                   safebox_items,
                   is_collection: true,
                   links: ::Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsCollectionLinks.build(
-                    params[:id]
+                    params[:id],
+                    query_params,
+                    total_safebox_items
                   )
                 ),
                 status: :ok

@@ -5,7 +5,7 @@ module Safeboxes
     module Application
       class ListSafeboxItemsUseCase < Shared::Application::UseCase
         repository "safeboxes.safeboxes.safebox_repository", Domain::SafeboxRepository::Interface
-        result :safebox_items
+        result :safebox_items, :total_safebox_items
 
         def retrieve_all(input:)
           if input.invalid?
@@ -22,9 +22,9 @@ module Safeboxes
             raise Domain::Errors::InvalidSafeboxTokenError, safebox.id.value
           end
 
-          safebox_items = safebox.items(input.query_params)
+          data = safebox.items(input.query_params)
 
-          result.success(safebox_items:)
+          result.success(safebox_items: data[:results], total_safebox_items: data[:total_results_count])
         end
       end
     end

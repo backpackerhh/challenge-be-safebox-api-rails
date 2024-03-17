@@ -45,7 +45,8 @@ RSpec.configure do |config|
           create_safebox_link: Shared::Infrastructure::SchemaValidator.load_schema("create_safebox_link"),
           open_safebox_link: Shared::Infrastructure::SchemaValidator.load_schema("open_safebox_link"),
           list_safebox_items_link: Shared::Infrastructure::SchemaValidator.load_schema("list_safebox_items_link"),
-          add_safebox_item_link: Shared::Infrastructure::SchemaValidator.load_schema("add_safebox_item_link")
+          add_safebox_item_link: Shared::Infrastructure::SchemaValidator.load_schema("add_safebox_item_link"),
+          pagination_link: Shared::Infrastructure::SchemaValidator.load_schema("pagination_link")
         }
       },
       servers: [
