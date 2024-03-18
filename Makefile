@@ -20,8 +20,7 @@ db-rollback:
 	@docker compose exec app rails db:rollback RAILS_ENV=$(APP_ENV) STEP=$(STEPS)
 
 restart-server:
-	@docker compose down app
-	@docker compose up app -d
+	@docker compose exec app rails restart
 
 start:
 	@docker compose up --build -d $(SERVICES)
