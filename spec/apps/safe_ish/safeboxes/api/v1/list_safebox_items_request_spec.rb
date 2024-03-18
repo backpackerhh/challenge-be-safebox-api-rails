@@ -124,9 +124,16 @@ RSpec.describe "List safebox items", type: %i[request database] do
       response "400", "Invalid parameters" do
         schema "$ref" => "#/components/schemas/api_error"
 
-        let(:Authorization) { "Bearer it-does-not-matter" }
+        let(:Authorization) { "Bearer #{token}" }
+        let(:token) { Safeboxes::Safeboxes::Infrastructure::Utils.generate_token(id, password) }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
+        let(:password) { "secret" }
         let(:sort) { "invalidParameter" }
+        let(:"page[number]") { -1 }
+
+        before do
+          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
+        end
 
         run_test! do |response|
           errors = JSON.parse(response.body)
@@ -140,6 +147,14 @@ RSpec.describe "List safebox items", type: %i[request database] do
                   "status" => "400",
                   "source" => {
                     "parameter" => "sort[invalid_parameter]"
+                  }
+                },
+                {
+                  "title" => "Invalid pagination value",
+                  "detail" => "Invalid pagination value: -1. Only integer values greater than zero are accepted",
+                  "status" => "400",
+                  "source" => {
+                    "parameter" => "page[number]"
                   }
                 }
               ]

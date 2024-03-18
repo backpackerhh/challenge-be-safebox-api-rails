@@ -9,30 +9,9 @@ RSpec.describe Safeboxes::Safeboxes::Application::ListSafeboxItemsUseCase, type:
     let(:token) { "token" }
     let(:query_params) { { sort: "-createdAt" } }
 
-    context "with an invalid input" do
-      it "returns found errors" do
-        input = instance_double(
-          Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput,
-          invalid?: true,
-          errors: ["<error>"]
-        )
-
-        result = described_class.new(repository:).retrieve_all(input:)
-
-        expect(result.errors).to eq(["<error>"])
-        expect(result.safebox_items).to be_nil
-        expect(result.total_safebox_items).to be_nil
-      end
-    end
-
     context "with a locked safebox" do
       it "raises an exception" do
-        input = instance_double(
-          Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput,
-          invalid?: false,
-          errors: [],
-          id:
-        )
+        input = instance_double(Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput, id:)
 
         allow(repository).to receive(:find_by_id).with(id) do
           Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build(:locked, id:)
@@ -44,15 +23,9 @@ RSpec.describe Safeboxes::Safeboxes::Application::ListSafeboxItemsUseCase, type:
       end
     end
 
-    context "when token is not valid" do
+    context "with an invalid token" do
       it "raises an exception" do
-        input = instance_double(
-          Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput,
-          invalid?: false,
-          errors: [],
-          id:,
-          token:
-        )
+        input = instance_double(Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput, id:, token:)
 
         allow(repository).to receive(:find_by_id).with(id) do
           Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build(id:)
@@ -66,7 +39,31 @@ RSpec.describe Safeboxes::Safeboxes::Application::ListSafeboxItemsUseCase, type:
       end
     end
 
-    context "when token is valid" do
+    context "with an invalid input" do
+      it "returns found errors" do
+        input = instance_double(
+          Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput,
+          invalid?: true,
+          errors: ["<error>"],
+          id:,
+          token:
+        )
+
+        allow(repository).to receive(:find_by_id).with(id) do
+          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.build(id:)
+        end
+
+        allow(repository).to receive(:valid_token?).with(token).and_return(true)
+
+        result = described_class.new(repository:).retrieve_all(input:)
+
+        expect(result.errors).to eq(["<error>"])
+        expect(result.safebox_items).to be_nil
+        expect(result.total_safebox_items).to be_nil
+      end
+    end
+
+    context "when a valid input" do
       it "returns expected values" do
         input = instance_double(
           Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput,

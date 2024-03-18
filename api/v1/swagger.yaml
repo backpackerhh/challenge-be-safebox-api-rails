@@ -110,7 +110,7 @@ paths:
           type: string
         explode: false
         required: false
-        description: 'Comma-separated sorting fields: '
+        description: 'Comma-separated sorting fields: name, createdAt'
       - name: page[number]
         in: query
         description: Page number
