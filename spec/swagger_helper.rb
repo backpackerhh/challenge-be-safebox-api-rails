@@ -6,7 +6,7 @@ RSpec.configure do |config|
   # Specify a root folder where Swagger JSON files are generated
   # NOTE: If you're using the rswag-api to serve API descriptions, you'll need
   # to ensure that it"s configured to serve Swagger from the same folder
-  config.openapi_root = Rails.root.join("api").to_s
+  config.openapi_root = Rswag::Api.config.openapi_root
 
   # Validate body does not contain undocumented properties
   # NOTE: Bear in mind that in strict mode all properties are required
@@ -19,7 +19,7 @@ RSpec.configure do |config|
   # document below. You can override this behavior by adding a openapi_spec tag to the
   # the root example_group in your specs, e.g. describe "...", openapi_spec: "v2/swagger.json"
   config.openapi_specs = {
-    "v1/swagger.yaml" => {
+    "v1/openapi.yaml" => {
       openapi: "3.0.1",
       info: {
         description: "SafeIsh API - The most secure safebox",
