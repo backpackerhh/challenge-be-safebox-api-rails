@@ -9,15 +9,15 @@ module Safeboxes
         end
 
         link :self do |_safebox_token, params|
-          Links::OpenSafeboxLink.build(params[:safebox_id])
+          Links::OpenSafeboxLink.build(params.fetch(:self_url))
         end
 
         link :getItems do |_safebox_token, params|
-          Links::ListSafeboxItemsLink.build(params[:safebox_id])
+          Links::ListSafeboxItemsLink.build(params.fetch(:get_items_url))
         end
 
         link :addItem do |_safebox_token, params|
-          Links::AddSafeboxItemLink.build(params[:safebox_id])
+          Links::AddSafeboxItemLink.build(params.fetch(:add_item_url))
         end
       end
     end

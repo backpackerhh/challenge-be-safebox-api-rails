@@ -57,15 +57,17 @@ RSpec.describe "Create safebox", type: %i[request database] do
                   "name" => safebox_params.dig(:data, :attributes, :name)
                 },
                 "links" => {
-                  "self" => Safeboxes::Safeboxes::Infrastructure::Links::CreateSafeboxLink.build,
+                  "self" => Safeboxes::Safeboxes::Infrastructure::Links::CreateSafeboxLink.build(
+                    create_safebox_url
+                  ),
                   "open" => Safeboxes::Safeboxes::Infrastructure::Links::OpenSafeboxLink.build(
-                    safebox_params.dig(:data, :id)
+                    open_safebox_url(safebox_params.dig(:data, :id))
                   ),
                   "getItems" => Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsLink.build(
-                    safebox_params.dig(:data, :id)
+                    list_safebox_items_url(safebox_params.dig(:data, :id))
                   ),
                   "addItem" => Safeboxes::Safeboxes::Infrastructure::Links::AddSafeboxItemLink.build(
-                    safebox_params.dig(:data, :id)
+                    add_safebox_item_url(safebox_params.dig(:data, :id))
                   )
                 }
               }

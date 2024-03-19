@@ -17,7 +17,10 @@ module SafeIsh
               successful_response(
                 ::Safeboxes::Safeboxes::Infrastructure::SafeboxItemSerializer.new(
                   safebox_item,
-                  params: { safebox_id: params[:id] }
+                  params: {
+                    self_url: add_safebox_item_url(params[:id]),
+                    get_items_url: list_safebox_items_url(params[:id])
+                  }
                 ),
                 status: :created
               )

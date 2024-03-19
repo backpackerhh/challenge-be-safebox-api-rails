@@ -45,6 +45,7 @@ Metrics/AbcSize:
   Exclude:
     - "contexts/safeboxes/safeboxes/application/add_safebox_item_use_case.rb"
     - "contexts/safeboxes/safeboxes/application/list_safebox_items_use_case.rb"
+    - "apps/safe_ish/safeboxes/api/v1/open_safebox_controller.rb"
 
 # Performance
 

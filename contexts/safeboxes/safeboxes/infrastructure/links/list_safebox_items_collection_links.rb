@@ -4,13 +4,13 @@ module Safeboxes
   module Safeboxes
     module Infrastructure
       module Links
-        class ListSafeboxItemsCollectionLinks < Shared::Infrastructure::LinkSerializer
-          def self.build(safebox_id, query_params, total_count)
+        class ListSafeboxItemsCollectionLinks
+          def self.build(urls, query_params, total_count)
             {
-              "self" => ListSafeboxItemsLink.build(safebox_id),
-              "addItem" => AddSafeboxItemLink.build(safebox_id),
+              "self" => ListSafeboxItemsLink.build(urls.fetch(:self_url)),
+              "addItem" => AddSafeboxItemLink.build(urls.fetch(:add_item_url)),
               **Shared::Infrastructure::PaginationLinks.build(
-                url_callback: ->(params) { list_safebox_items_url(safebox_id, params) },
+                url_lambda: urls.fetch(:self_url_lambda),
                 query_params:,
                 total_count:
               )

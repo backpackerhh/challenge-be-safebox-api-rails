@@ -4,10 +4,10 @@ module Safeboxes
   module Safeboxes
     module Infrastructure
       module Links
-        class CreateSafeboxLink < Shared::Infrastructure::LinkSerializer
-          def self.build
+        class CreateSafeboxLink
+          def self.build(url)
             {
-              "href" => create_safebox_url,
+              "href" => url,
               "title" => "Create a new safebox",
               "meta" => {
                 "method" => "post"

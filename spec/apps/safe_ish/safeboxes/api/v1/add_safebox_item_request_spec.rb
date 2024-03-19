@@ -68,8 +68,12 @@ RSpec.describe "Add safebox item", type: %i[request database] do
                   }
                 },
                 "links" => {
-                  "self" => Safeboxes::Safeboxes::Infrastructure::Links::AddSafeboxItemLink.build(id),
-                  "getItems" => Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsLink.build(id)
+                  "self" => Safeboxes::Safeboxes::Infrastructure::Links::AddSafeboxItemLink.build(
+                    add_safebox_item_url(id)
+                  ),
+                  "getItems" => Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsLink.build(
+                    list_safebox_items_url(id)
+                  )
                 }
               }
             }

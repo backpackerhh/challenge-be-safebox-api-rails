@@ -17,7 +17,9 @@ module SafeIsh
                 ::Safeboxes::Safeboxes::Infrastructure::SafeboxTokenSerializer.new(
                   safebox_token,
                   params: {
-                    safebox_id: params[:id]
+                    self_url: open_safebox_url(params[:id]),
+                    get_items_url: list_safebox_items_url(params[:id]),
+                    add_item_url: add_safebox_item_url(params[:id])
                   }
                 ),
                 status: :ok

@@ -18,11 +18,7 @@ module SafeIsh
                 ::Safeboxes::Safeboxes::Infrastructure::SafeboxItemCollectionSerializer.new(
                   safebox_items,
                   is_collection: true,
-                  links: ::Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsCollectionLinks.build(
-                    params[:id],
-                    query_params,
-                    total_safebox_items
-                  )
+                  links: build_links_for(params[:id], query_params, total_safebox_items)
                 ),
                 status: :ok
               )
@@ -31,6 +27,20 @@ module SafeIsh
             result.on_failure do |errors|
               failed_response(errors, status: :bad_request)
             end
+          end
+
+          private
+
+          def build_links_for(safebox_id, query_params, total_count)
+            ::Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsCollectionLinks.build(
+              {
+                self_url: list_safebox_items_url(safebox_id),
+                add_item_url: add_safebox_item_url(safebox_id),
+                self_url_lambda: ->(params) { list_safebox_items_url(safebox_id, params) }
+              },
+              query_params,
+              total_count
+            )
           end
         end
       end

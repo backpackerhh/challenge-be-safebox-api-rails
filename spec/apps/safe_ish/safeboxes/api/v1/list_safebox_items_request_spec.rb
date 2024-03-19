@@ -112,7 +112,11 @@ RSpec.describe "List safebox items", type: %i[request database] do
                 }
               ],
               "links" => Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsCollectionLinks.build(
-                id,
+                {
+                  self_url: list_safebox_items_url(id),
+                  add_item_url: add_safebox_item_url(id),
+                  self_url_lambda: ->(params) { list_safebox_items_url(id, params) }
+                },
                 {},
                 2
               )

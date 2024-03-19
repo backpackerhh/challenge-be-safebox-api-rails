@@ -72,4 +72,7 @@ RSpec.configure do |config|
 
   # Time helpers
   config.include ActiveSupport::Testing::TimeHelpers
+
+  # URL helpers
+  config.include Rails.application.routes.url_helpers
 end

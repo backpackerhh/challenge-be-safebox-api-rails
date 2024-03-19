@@ -6,12 +6,13 @@ module Shared
       def self.build(...)
         new(...).build
       end
-      attr_reader :url_callback, :query_params, :page_number, :last_page_number
+
+      attr_reader :url_lambda, :query_params, :page_number, :last_page_number
 
       private_class_method :new
 
-      def initialize(url_callback:, query_params:, total_count:)
-        @url_callback = url_callback
+      def initialize(url_lambda:, query_params:, total_count:)
+        @url_lambda = url_lambda
         @query_params = query_params
         @page_number = (query_params.dig(:page, :number) || PaginationValidator::DEFAULT_PAGE_NUMBER).to_i
         page_size = (query_params.dig(:page, :size) || PaginationValidator::DEFAULT_PAGE_SIZE).to_i
@@ -57,7 +58,7 @@ module Shared
           }
         }
 
-        url_callback.call(params)
+        url_lambda.call(params)
       end
     end
   end

@@ -4,10 +4,10 @@ module Safeboxes
   module Safeboxes
     module Infrastructure
       module Links
-        class OpenSafeboxLink < Shared::Infrastructure::LinkSerializer
-          def self.build(id)
+        class OpenSafeboxLink
+          def self.build(url)
             {
-              "href" => open_safebox_url(id),
+              "href" => url,
               "title" => "Open a safebox",
               "meta" => {
                 "method" => "post"
