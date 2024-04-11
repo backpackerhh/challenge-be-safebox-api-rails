@@ -6,6 +6,7 @@ module SafeboxesContext
       class AddSafeboxItemUseCase < SharedContext::Application::UseCase
         repository "safeboxes.safeboxes.safebox_repository", Domain::SafeboxRepository::Interface
         result :safebox_item
+        logger
 
         def create(input:)
           safebox = repository.find_by_id(input.safebox_id)
@@ -23,6 +24,8 @@ module SafeboxesContext
           end
 
           safebox.add_item(input.data)
+
+          logger.info("Item successfully added to safebox with ID #{safebox.id.value}")
 
           result.success(safebox_item: safebox.item(input.data.fetch(:id)))
         end

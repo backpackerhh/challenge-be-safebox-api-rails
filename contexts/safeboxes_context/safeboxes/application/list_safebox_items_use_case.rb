@@ -6,6 +6,7 @@ module SafeboxesContext
       class ListSafeboxItemsUseCase < SharedContext::Application::UseCase
         repository "safeboxes.safeboxes.safebox_repository", Domain::SafeboxRepository::Interface
         result :safebox_items, :total_safebox_items
+        logger
 
         def retrieve_all(input:)
           safebox = repository.find_by_id(input.id)
@@ -23,6 +24,8 @@ module SafeboxesContext
           end
 
           data = safebox.items(input.query_params)
+
+          logger.info("Items successfully retrieved for safebox with ID #{safebox.id.value}")
 
           result.success(safebox_items: data[:results], total_safebox_items: data[:total_results_count])
         end

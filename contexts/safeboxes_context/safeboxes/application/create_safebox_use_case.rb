@@ -6,6 +6,7 @@ module SafeboxesContext
       class CreateSafeboxUseCase < SharedContext::Application::UseCase
         repository "safeboxes.safeboxes.safebox_repository", Domain::SafeboxRepository::Interface
         result :safebox
+        logger
 
         def create(input:)
           if input.invalid?
@@ -15,6 +16,8 @@ module SafeboxesContext
           safebox = Domain::NewSafeboxEntity.from_primitives(input.data)
 
           repository.create(safebox.to_primitives)
+
+          logger.info("Safebox with ID #{safebox.id.value} successfully created")
 
           result.success(safebox:)
         end

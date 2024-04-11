@@ -6,6 +6,7 @@ module SafeboxesContext
       class OpenSafeboxUseCase < SharedContext::Application::UseCase
         repository "safeboxes.safeboxes.safebox_repository", Domain::SafeboxRepository::Interface
         result :safebox_token
+        logger
 
         def open(input:)
           safebox = repository.find_by_id(input.id)
@@ -19,6 +20,8 @@ module SafeboxesContext
           if safebox_token.nil?
             raise Domain::Errors::InvalidSafeboxPasswordError, safebox.id.value
           end
+
+          logger.info("Safebox with ID #{safebox.id.value} successfully open")
 
           result.success(safebox_token:)
         end

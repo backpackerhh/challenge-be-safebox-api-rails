@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "dry-struct"
+require "dry-types"
 
 module SharedContext
   module Application
@@ -18,6 +19,12 @@ module SharedContext
         attribute :repository, type # order matters here
 
         include SafeIsh::Deps[repository: dependency_key]
+      end
+
+      def self.logger
+        attribute :logger, Dry.Types.Interface(:info)
+
+        include SafeIsh::Deps["app.logger"]
       end
 
       def self.result_class
