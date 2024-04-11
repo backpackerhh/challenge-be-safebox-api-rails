@@ -8,19 +8,19 @@ db-connect:
 	@docker compose exec db psql -U $(DB_USER) -d $(DB_NAME)
 
 db-create:
-	@docker compose exec app rails db:create
+	@docker compose exec app bundle exec rails db:create
 
 db-generate-migration:
-	@docker compose exec app rails g migration $(NAME)
+	@docker compose exec app bundle exec rails g migration $(NAME)
 
 db-migrate:
-	@docker compose exec app rails db:migrate RAILS_ENV=$(APP_ENV)
+	@docker compose exec app bundle exec rails db:migrate RAILS_ENV=$(APP_ENV)
 
 db-rollback:
-	@docker compose exec app rails db:rollback RAILS_ENV=$(APP_ENV) STEP=$(STEPS)
+	@docker compose exec app bundle exec rails db:rollback RAILS_ENV=$(APP_ENV) STEP=$(STEPS)
 
 restart-server:
-	@docker compose exec app rails restart
+	@docker compose exec app bundle exec rails restart
 
 start:
 	@docker compose up --build -d $(SERVICES)
@@ -39,19 +39,19 @@ install:
 	@docker compose exec app bundle install
 
 console:
-	@docker compose exec app rails console -e $(APP_ENV)
+	@docker compose exec app bundle exec rails console -e $(APP_ENV)
 
 routes:
-	@docker compose exec app rails routes
+	@docker compose exec app bundle exec rails routes
 
 test:
-	@docker compose exec app rspec ${TEST_PATH}
+	@docker compose exec app bundle exec rspec ${TEST_PATH}
 
 test-api:
-	@docker compose exec app rails rswag PATTERN="spec/apps/**/*_request_spec.rb" SWAGGER_DRY_RUN=0
+	@docker compose exec app bundle exec rails rswag PATTERN="spec/apps/**/*_request_spec.rb" SWAGGER_DRY_RUN=0
 
 lint:
-	@docker compose exec app rubocop
+	@docker compose exec app bundle exec rubocop
 
 logs:
 	@docker compose logs $(SERVICE) -f
