@@ -44,10 +44,6 @@ gem "jsonapi-serializer", "~> 2.2"
 gem "rswag-api", "~> 2.13"
 gem "rswag-ui", "~> 2.13"
 
-# Clean Ruby
-gem "dry-rails", "~> 0.3"
-gem "dry-struct", "~> 1.6"
-
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[mri windows]
@@ -68,4 +64,5 @@ end
 
 group :test do
   gem "database_cleaner-active_record", "~> 2.1"
+  gem "shoulda-matchers", "~> 6.0"
 end

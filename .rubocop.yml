@@ -30,29 +30,26 @@ Style/NegatedIf:
 Metrics/ParameterLists:
   Enabled: true
   Exclude:
-    - "contexts/shared_context/infrastructure/error.rb"
+    - "app/errors/error.rb"
 
 Metrics/MethodLength:
   Enabled: true
   CountAsOne: ["array", "hash", "heredoc", "method_call"]
   Exclude:
-    - "contexts/safeboxes_context/safeboxes/application/add_safebox_item_use_case.rb"
-    - "contexts/safeboxes_context/safeboxes/application/list_safebox_items_use_case.rb"
+    - "app/controllers/api/v1/safebox_items_controller.rb"
 
 Metrics/AbcSize:
   Enabled: true
   CountRepeatedAttributes: false
   Exclude:
-    - "contexts/safeboxes_context/safeboxes/application/add_safebox_item_use_case.rb"
-    - "contexts/safeboxes_context/safeboxes/application/list_safebox_items_use_case.rb"
-    - "apps/safe_ish/safeboxes/api/v1/open_safebox_controller.rb"
+    - "app/controllers/api/v1/safebox_items_controller.rb"
 
 # Performance
 
 Performance/Sum:
   Enabled: true
   Exclude:
-    - "contexts/shared_context/infrastructure/collection_input.rb"
+    - "app/validators/parametizable_query_validator.rb"
 
 # Rails
 
@@ -71,14 +68,13 @@ Rails/SkipsModelValidations:
 RSpec/NestedGroups:
   Enabled: true
   Exclude:
-    - "spec/apps/**/*_request_spec.rb"
+    - "spec/requests/**/*_request_spec.rb"
 
 RSpec/ExampleLength:
   Enabled: true
+  CountAsOne: ["array", "hash", "heredoc", "method_call"]
   Exclude:
-    - "spec/contexts/**/*_use_case_spec.rb"
-    - "spec/contexts/**/*_repository_spec.rb"
-    - "spec/apps/**/*_request_spec.rb"
+    - "spec/requests/**/*_request_spec.rb"
 
 RSpec/MessageSpies:
   Enabled: true
@@ -87,20 +83,17 @@ RSpec/MessageSpies:
 RSpec/VariableName:
   Enabled: true
   Exclude:
-    - "spec/apps/**/*_request_spec.rb"
+    - "spec/requests/**/*_request_spec.rb"
 
 RSpec/DescribeClass:
   Enabled: true
   Exclude:
-    - "spec/apps/**/*_request_spec.rb"
-
-RSpec/MultipleExpectations:
-  Enabled: true
-  Exclude:
-    - "spec/contexts/**/*_use_case_spec.rb"
-    - "spec/contexts/**/*_repository_spec.rb"
+    - "spec/requests/**/*_request_spec.rb"
 
 RSpec/MultipleMemoizedHelpers:
   Enabled: true
   Exclude:
-    - "spec/apps/**/*_request_spec.rb"
+    - "spec/requests/**/*_request_spec.rb"
+
+RSpec/Rails/InferredSpecType:
+  Enabled: false

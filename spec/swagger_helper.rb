@@ -35,20 +35,18 @@ RSpec.configure do |config|
           }
         },
         schemas: {
-          new_safebox: SharedContext::Infrastructure::SchemaValidator.load_schema("new_safebox"),
-          safebox: SharedContext::Infrastructure::SchemaValidator.load_schema("safebox"),
-          safebox_token: SharedContext::Infrastructure::SchemaValidator.load_schema("safebox_token"),
-          new_safebox_item: SharedContext::Infrastructure::SchemaValidator.load_schema("new_safebox_item"),
-          safebox_item: SharedContext::Infrastructure::SchemaValidator.load_schema("safebox_item"),
-          safebox_items: SharedContext::Infrastructure::SchemaValidator.load_schema("safebox_items"),
-          api_error: SharedContext::Infrastructure::SchemaValidator.load_schema("api_error"),
-          create_safebox_link: SharedContext::Infrastructure::SchemaValidator.load_schema("create_safebox_link"),
-          open_safebox_link: SharedContext::Infrastructure::SchemaValidator.load_schema("open_safebox_link"),
-          list_safebox_items_link: SharedContext::Infrastructure::SchemaValidator.load_schema(
-            "list_safebox_items_link"
-          ),
-          add_safebox_item_link: SharedContext::Infrastructure::SchemaValidator.load_schema("add_safebox_item_link"),
-          pagination_link: SharedContext::Infrastructure::SchemaValidator.load_schema("pagination_link")
+          new_safebox: Test::SchemaLoader.load_schema("new_safebox"),
+          safebox: Test::SchemaLoader.load_schema("safebox"),
+          safebox_token: Test::SchemaLoader.load_schema("safebox_token"),
+          new_safebox_item: Test::SchemaLoader.load_schema("new_safebox_item"),
+          safebox_item: Test::SchemaLoader.load_schema("safebox_item"),
+          safebox_items: Test::SchemaLoader.load_schema("safebox_items"),
+          api_error: Test::SchemaLoader.load_schema("api_error"),
+          create_safebox_link: Test::SchemaLoader.load_schema("create_safebox_link"),
+          open_safebox_link: Test::SchemaLoader.load_schema("open_safebox_link"),
+          list_safebox_items_link: Test::SchemaLoader.load_schema("list_safebox_items_link"),
+          add_safebox_item_link: Test::SchemaLoader.load_schema("add_safebox_item_link"),
+          pagination_link: Test::SchemaLoader.load_schema("pagination_link")
         }
       },
       servers: [

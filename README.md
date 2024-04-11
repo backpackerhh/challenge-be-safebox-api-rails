@@ -13,7 +13,7 @@ issues.
 The CEO of Security-ish, who does not have technical background, has paid for an external consultant to develop the
 new release of the product.
 
-These guys have created an [API definition](./open-api.spec.yaml) (with OpenAPI) with the main endpoints of it, but once
+These guys have created an API definition (with OpenAPI) with the main endpoints of it, but once
 they start coding they broke their collaboration. So the CEO is looking for someone who could help her to create the
 next version of that API.
 
@@ -53,11 +53,10 @@ you expected!
 
 Remember that **there is no countdown**, so take your time and implement a solution that you are proud!
 
---- 
+---
 
 <p align="center">
   If you have any feedback or problem, <a href="mailto:help@rviewer.io">let us know!</a> 🤘
   <br><br>
   Made with ❤️ by <a href="https://rviewer.io">Rviewer</a>
 </p>
-
