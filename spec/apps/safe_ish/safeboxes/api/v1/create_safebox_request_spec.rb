@@ -18,7 +18,7 @@ RSpec.describe "Create safebox", type: %i[request database] do
         schema "$ref" => "#/components/schemas/safebox"
 
         let(:safebox_params) do
-          Safeboxes::Safeboxes::Domain::NewSafeboxEntityFactory.build_params
+          SafeboxesContext::Safeboxes::Domain::NewSafeboxEntityFactory.build_params
         end
 
         after do |example|
@@ -57,16 +57,16 @@ RSpec.describe "Create safebox", type: %i[request database] do
                   "name" => safebox_params.dig(:data, :attributes, :name)
                 },
                 "links" => {
-                  "self" => Safeboxes::Safeboxes::Infrastructure::Links::CreateSafeboxLink.build(
+                  "self" => SafeboxesContext::Safeboxes::Infrastructure::Links::CreateSafeboxLink.build(
                     create_safebox_url
                   ),
-                  "open" => Safeboxes::Safeboxes::Infrastructure::Links::OpenSafeboxLink.build(
+                  "open" => SafeboxesContext::Safeboxes::Infrastructure::Links::OpenSafeboxLink.build(
                     open_safebox_url(safebox_params.dig(:data, :id))
                   ),
-                  "getItems" => Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsLink.build(
+                  "getItems" => SafeboxesContext::Safeboxes::Infrastructure::Links::ListSafeboxItemsLink.build(
                     list_safebox_items_url(safebox_params.dig(:data, :id))
                   ),
-                  "addItem" => Safeboxes::Safeboxes::Infrastructure::Links::AddSafeboxItemLink.build(
+                  "addItem" => SafeboxesContext::Safeboxes::Infrastructure::Links::AddSafeboxItemLink.build(
                     add_safebox_item_url(safebox_params.dig(:data, :id))
                   )
                 }
@@ -106,11 +106,11 @@ RSpec.describe "Create safebox", type: %i[request database] do
         schema "$ref" => "#/components/schemas/api_error"
 
         let(:safebox_params) do
-          Safeboxes::Safeboxes::Domain::NewSafeboxEntityFactory.build_params
+          SafeboxesContext::Safeboxes::Domain::NewSafeboxEntityFactory.build_params
         end
 
         before do
-          Safeboxes::Safeboxes::Domain::NewSafeboxEntityFactory.create(id: safebox_params.dig(:data, :id))
+          SafeboxesContext::Safeboxes::Domain::NewSafeboxEntityFactory.create(id: safebox_params.dig(:data, :id))
         end
 
         run_test! do |response|
@@ -163,7 +163,7 @@ RSpec.describe "Create safebox", type: %i[request database] do
         schema "$ref" => "#/components/schemas/api_error"
 
         let(:safebox_params) do
-          Safeboxes::Safeboxes::Domain::NewSafeboxEntityFactory.build_params(id: "uuid")
+          SafeboxesContext::Safeboxes::Domain::NewSafeboxEntityFactory.build_params(id: "uuid")
         end
 
         run_test! do |response|
@@ -190,11 +190,11 @@ RSpec.describe "Create safebox", type: %i[request database] do
         schema "$ref" => "#/components/schemas/api_error"
 
         let(:safebox_params) do
-          Safeboxes::Safeboxes::Domain::NewSafeboxEntityFactory.build_params
+          SafeboxesContext::Safeboxes::Domain::NewSafeboxEntityFactory.build_params
         end
 
         before do
-          allow(Safeboxes::Safeboxes::Infrastructure::CreateSafeboxInput).to receive(:new)
+          allow(SafeboxesContext::Safeboxes::Infrastructure::CreateSafeboxInput).to receive(:new)
             .and_raise(ArgumentError, "missing required argument")
         end
 

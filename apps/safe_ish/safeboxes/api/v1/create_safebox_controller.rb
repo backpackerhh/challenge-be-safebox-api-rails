@@ -6,12 +6,12 @@ module SafeIsh
       module V1
         class CreateSafeboxController < ApplicationController
           def create
-            input = ::Safeboxes::Safeboxes::Infrastructure::CreateSafeboxInput.new(raw_data: body_params)
-            result = ::Safeboxes::Safeboxes::Application::CreateSafeboxUseCase.new.create(input:)
+            input = SafeboxesContext::Safeboxes::Infrastructure::CreateSafeboxInput.new(raw_data: body_params)
+            result = SafeboxesContext::Safeboxes::Application::CreateSafeboxUseCase.new.create(input:)
 
             result.on_success do |safebox|
               successful_response(
-                ::Safeboxes::Safeboxes::Infrastructure::SafeboxSerializer.new(
+                SafeboxesContext::Safeboxes::Infrastructure::SafeboxSerializer.new(
                   safebox,
                   params: {
                     self_url: create_safebox_url,

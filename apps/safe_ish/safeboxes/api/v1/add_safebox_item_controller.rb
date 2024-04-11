@@ -6,16 +6,16 @@ module SafeIsh
       module V1
         class AddSafeboxItemController < ApplicationController
           def create
-            input = ::Safeboxes::Safeboxes::Infrastructure::AddSafeboxItemInput.new(
+            input = SafeboxesContext::Safeboxes::Infrastructure::AddSafeboxItemInput.new(
               raw_data: body_params,
               safebox_id: params[:id],
               token: extract_token_from_auth_header
             )
-            result = ::Safeboxes::Safeboxes::Application::AddSafeboxItemUseCase.new.create(input:)
+            result = SafeboxesContext::Safeboxes::Application::AddSafeboxItemUseCase.new.create(input:)
 
             result.on_success do |safebox_item|
               successful_response(
-                ::Safeboxes::Safeboxes::Infrastructure::SafeboxItemSerializer.new(
+                SafeboxesContext::Safeboxes::Infrastructure::SafeboxItemSerializer.new(
                   safebox_item,
                   params: {
                     self_url: add_safebox_item_url(params[:id]),

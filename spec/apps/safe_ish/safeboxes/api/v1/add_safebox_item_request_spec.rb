@@ -25,15 +25,15 @@ RSpec.describe "Add safebox item", type: %i[request database] do
         schema "$ref" => "#/components/schemas/safebox_item"
 
         let(:Authorization) { "Bearer #{token}" }
-        let(:token) { Safeboxes::Safeboxes::Infrastructure::Utils.generate_token(id, password) }
+        let(:token) { SafeboxesContext::Safeboxes::Infrastructure::Utils.generate_token(id, password) }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
         let(:password) { "secret" }
         let(:safebox_item_params) do
-          Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.build_params(safebox_id: id)
+          SafeboxesContext::Safeboxes::Domain::SafeboxItemEntityFactory.build_params(safebox_id: id)
         end
 
         before do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
+          SafeboxesContext::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
         end
 
         after do |example|
@@ -68,10 +68,10 @@ RSpec.describe "Add safebox item", type: %i[request database] do
                   }
                 },
                 "links" => {
-                  "self" => Safeboxes::Safeboxes::Infrastructure::Links::AddSafeboxItemLink.build(
+                  "self" => SafeboxesContext::Safeboxes::Infrastructure::Links::AddSafeboxItemLink.build(
                     add_safebox_item_url(id)
                   ),
-                  "getItems" => Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsLink.build(
+                  "getItems" => SafeboxesContext::Safeboxes::Infrastructure::Links::ListSafeboxItemsLink.build(
                     list_safebox_items_url(id)
                   )
                 }
@@ -89,7 +89,7 @@ RSpec.describe "Add safebox item", type: %i[request database] do
         let(:safebox_item_params) { {} }
 
         before do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id:)
+          SafeboxesContext::Safeboxes::Domain::SafeboxEntityFactory.create(id:)
         end
 
         after do |example|
@@ -207,15 +207,15 @@ RSpec.describe "Add safebox item", type: %i[request database] do
         schema "$ref" => "#/components/schemas/api_error"
 
         let(:Authorization) { "Bearer #{token}" }
-        let(:token) { Safeboxes::Safeboxes::Infrastructure::Utils.generate_token(id, password) }
+        let(:token) { SafeboxesContext::Safeboxes::Infrastructure::Utils.generate_token(id, password) }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
         let(:password) { "secret" }
         let(:safebox_item_params) do
-          Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.build_params(safebox_id: id, id: "uuid")
+          SafeboxesContext::Safeboxes::Domain::SafeboxItemEntityFactory.build_params(safebox_id: id, id: "uuid")
         end
 
         before do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
+          SafeboxesContext::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
         end
 
         run_test! do |response|
@@ -246,7 +246,7 @@ RSpec.describe "Add safebox item", type: %i[request database] do
         let(:safebox_item_params) { {} }
 
         before do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(:locked, id:)
+          SafeboxesContext::Safeboxes::Domain::SafeboxEntityFactory.create(:locked, id:)
         end
 
         run_test! do |response|
@@ -274,7 +274,7 @@ RSpec.describe "Add safebox item", type: %i[request database] do
         let(:safebox_item_params) { {} }
 
         before do
-          allow(Safeboxes::Safeboxes::Infrastructure::AddSafeboxItemInput).to receive(:new)
+          allow(SafeboxesContext::Safeboxes::Infrastructure::AddSafeboxItemInput).to receive(:new)
             .and_raise(ArgumentError, "missing required argument")
         end
 

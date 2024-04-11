@@ -22,7 +22,7 @@ RSpec.describe "List safebox items", type: %i[request database] do
                 explode: false,
                 required: false,
                 description: "Comma-separated sorting fields: " \
-                             "#{Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput.sortable_fields
+                             "#{SafeboxesContext::Safeboxes::Infrastructure::ListSafeboxItemsInput.sortable_fields
                                                                                            .join(', ')
                                                                                            .camelize(:lower)}"
       parameter name: "page[number]",
@@ -43,19 +43,19 @@ RSpec.describe "List safebox items", type: %i[request database] do
         schema "$ref" => "#/components/schemas/safebox_items"
 
         let(:Authorization) { "Bearer #{token}" }
-        let(:token) { Safeboxes::Safeboxes::Infrastructure::Utils.generate_token(id, password) }
+        let(:token) { SafeboxesContext::Safeboxes::Infrastructure::Utils.generate_token(id, password) }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
         let(:password) { "secret" }
 
         before do
-          safebox = Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
+          safebox = SafeboxesContext::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
 
-          Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(
+          SafeboxesContext::Safeboxes::Domain::SafeboxItemEntityFactory.create(
             id: "932464d1-3434-4382-aeb9-50f21828b883",
             safebox_id: safebox.id.value,
             name: "Item 01"
           )
-          Safeboxes::Safeboxes::Domain::SafeboxItemEntityFactory.create(
+          SafeboxesContext::Safeboxes::Domain::SafeboxItemEntityFactory.create(
             id: "baa7a07f-d972-4cfe-88b5-248c87c51d78",
             safebox_id: safebox.id.value,
             name: "Item 02"
@@ -111,7 +111,7 @@ RSpec.describe "List safebox items", type: %i[request database] do
                   }
                 }
               ],
-              "links" => Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsCollectionLinks.build(
+              "links" => SafeboxesContext::Safeboxes::Infrastructure::Links::ListSafeboxItemsCollectionLinks.build(
                 {
                   self_url: list_safebox_items_url(id),
                   add_item_url: add_safebox_item_url(id),
@@ -129,14 +129,14 @@ RSpec.describe "List safebox items", type: %i[request database] do
         schema "$ref" => "#/components/schemas/api_error"
 
         let(:Authorization) { "Bearer #{token}" }
-        let(:token) { Safeboxes::Safeboxes::Infrastructure::Utils.generate_token(id, password) }
+        let(:token) { SafeboxesContext::Safeboxes::Infrastructure::Utils.generate_token(id, password) }
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
         let(:password) { "secret" }
         let(:sort) { "invalidParameter" }
         let(:"page[number]") { -1 }
 
         before do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
+          SafeboxesContext::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
         end
 
         run_test! do |response|
@@ -174,7 +174,7 @@ RSpec.describe "List safebox items", type: %i[request database] do
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
 
         before do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id:)
+          SafeboxesContext::Safeboxes::Domain::SafeboxEntityFactory.create(id:)
         end
 
         after do |example|
@@ -292,7 +292,7 @@ RSpec.describe "List safebox items", type: %i[request database] do
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
 
         before do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(:locked, id:)
+          SafeboxesContext::Safeboxes::Domain::SafeboxEntityFactory.create(:locked, id:)
         end
 
         run_test! do |response|
@@ -319,7 +319,7 @@ RSpec.describe "List safebox items", type: %i[request database] do
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
 
         before do
-          allow(Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput).to receive(:new)
+          allow(SafeboxesContext::Safeboxes::Infrastructure::ListSafeboxItemsInput).to receive(:new)
             .and_raise(ArgumentError, "missing required argument")
         end
 

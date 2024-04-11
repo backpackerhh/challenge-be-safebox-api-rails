@@ -31,7 +31,7 @@ RSpec.describe "Open safebox", type: %i[request database] do
         let(:password) { "secret" }
 
         before do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
+          SafeboxesContext::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
         end
 
         after do |example|
@@ -62,13 +62,13 @@ RSpec.describe "Open safebox", type: %i[request database] do
                 "id" => String,
                 "type" => "safeboxToken",
                 "links" => {
-                  "self" => Safeboxes::Safeboxes::Infrastructure::Links::OpenSafeboxLink.build(
+                  "self" => SafeboxesContext::Safeboxes::Infrastructure::Links::OpenSafeboxLink.build(
                     open_safebox_url(id)
                   ),
-                  "getItems" => Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsLink.build(
+                  "getItems" => SafeboxesContext::Safeboxes::Infrastructure::Links::ListSafeboxItemsLink.build(
                     list_safebox_items_url(id)
                   ),
-                  "addItem" => Safeboxes::Safeboxes::Infrastructure::Links::AddSafeboxItemLink.build(
+                  "addItem" => SafeboxesContext::Safeboxes::Infrastructure::Links::AddSafeboxItemLink.build(
                     add_safebox_item_url(id)
                   )
                 }
@@ -86,7 +86,7 @@ RSpec.describe "Open safebox", type: %i[request database] do
         let(:password) { "secret" }
 
         before do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
+          SafeboxesContext::Safeboxes::Domain::SafeboxEntityFactory.create(id:, password:)
         end
 
         run_test! do |response|
@@ -193,7 +193,7 @@ RSpec.describe "Open safebox", type: %i[request database] do
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
 
         before do
-          Safeboxes::Safeboxes::Domain::SafeboxEntityFactory.create(:locked, id:)
+          SafeboxesContext::Safeboxes::Domain::SafeboxEntityFactory.create(:locked, id:)
         end
 
         run_test! do |response|
@@ -220,7 +220,7 @@ RSpec.describe "Open safebox", type: %i[request database] do
         let(:id) { "f626c808-648c-41fe-865d-c6062f3e0899" }
 
         before do
-          allow(Safeboxes::Safeboxes::Infrastructure::OpenSafeboxInput).to receive(:new)
+          allow(SafeboxesContext::Safeboxes::Infrastructure::OpenSafeboxInput).to receive(:new)
             .and_raise(ArgumentError, "missing required argument")
         end
 

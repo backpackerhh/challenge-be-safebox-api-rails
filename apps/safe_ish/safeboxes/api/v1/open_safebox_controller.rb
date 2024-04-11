@@ -6,15 +6,15 @@ module SafeIsh
       module V1
         class OpenSafeboxController < ApplicationController
           def create
-            input = ::Safeboxes::Safeboxes::Infrastructure::OpenSafeboxInput.new(
+            input = SafeboxesContext::Safeboxes::Infrastructure::OpenSafeboxInput.new(
               id: params[:id],
               encoded_password: request.headers[OPEN_SAFEBOX_HEADER]
             )
-            result = ::Safeboxes::Safeboxes::Application::OpenSafeboxUseCase.new.open(input:)
+            result = SafeboxesContext::Safeboxes::Application::OpenSafeboxUseCase.new.open(input:)
 
             result.on_success do |safebox_token|
               successful_response(
-                ::Safeboxes::Safeboxes::Infrastructure::SafeboxTokenSerializer.new(
+                SafeboxesContext::Safeboxes::Infrastructure::SafeboxTokenSerializer.new(
                   safebox_token,
                   params: {
                     self_url: open_safebox_url(params[:id]),

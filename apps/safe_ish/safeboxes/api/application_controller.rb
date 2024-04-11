@@ -28,48 +28,48 @@ module SafeIsh
         end
 
         def failed_response(errors, status: :bad_request)
-          errors = Shared::Infrastructure::Error.generate_from(errors)
+          errors = SharedContext::Infrastructure::Error.generate_from(errors)
 
           render json: { errors: }, status:
         end
 
         rescue_from StandardError, ScriptError do |e|
-          error = Shared::Infrastructure::Errors::InternalServerError.new(e)
+          error = SharedContext::Infrastructure::Errors::InternalServerError.new(e)
 
           failed_response(error, status: :internal_server_error)
         end
 
-        rescue_from Shared::Domain::Errors::InvalidArgumentError do |e|
+        rescue_from SharedContext::Domain::Errors::InvalidArgumentError do |e|
           failed_response(e, status: :unprocessable_entity)
         end
 
-        rescue_from Shared::Infrastructure::Errors::NotAcceptableMediaTypeError do |e|
+        rescue_from SharedContext::Infrastructure::Errors::NotAcceptableMediaTypeError do |e|
           failed_response(e, status: :not_acceptable)
         end
 
-        rescue_from Shared::Infrastructure::Errors::UnsupportedMediaTypeError do |e|
+        rescue_from SharedContext::Infrastructure::Errors::UnsupportedMediaTypeError do |e|
           failed_response(e, status: :unsupported_media_type)
         end
 
-        rescue_from Shared::Infrastructure::Errors::DuplicatedRecordError do |e|
+        rescue_from SharedContext::Infrastructure::Errors::DuplicatedRecordError do |e|
           failed_response(e, status: :conflict)
         end
 
-        rescue_from Shared::Infrastructure::Errors::RecordNotFoundError do |e|
+        rescue_from SharedContext::Infrastructure::Errors::RecordNotFoundError do |e|
           failed_response(e, status: :not_found)
         end
 
-        rescue_from ::Safeboxes::Safeboxes::Domain::Errors::LockedSafeboxError do |e|
+        rescue_from SafeboxesContext::Safeboxes::Domain::Errors::LockedSafeboxError do |e|
           failed_response(e, status: :locked)
         end
 
-        rescue_from ::Safeboxes::Safeboxes::Domain::Errors::InvalidSafeboxPasswordError do |e|
+        rescue_from SafeboxesContext::Safeboxes::Domain::Errors::InvalidSafeboxPasswordError do |e|
           e.header = OPEN_SAFEBOX_HEADER
 
           failed_response(e, status: :unauthorized)
         end
 
-        rescue_from ::Safeboxes::Safeboxes::Domain::Errors::InvalidSafeboxTokenError do |e|
+        rescue_from SafeboxesContext::Safeboxes::Domain::Errors::InvalidSafeboxTokenError do |e|
           e.header = AUTHORIZATION_HEADER
 
           failed_response(e, status: :unauthorized)
@@ -82,7 +82,7 @@ module SafeIsh
         def check_accept_header
           return if request.headers[ACCEPT_HEADER].to_s.include?(JSON_API_MEDIA_TYPE)
 
-          raise Shared::Infrastructure::Errors::NotAcceptableMediaTypeError.new(
+          raise SharedContext::Infrastructure::Errors::NotAcceptableMediaTypeError.new(
             request.headers[ACCEPT_HEADER],
             ACCEPT_HEADER
           )
@@ -91,7 +91,7 @@ module SafeIsh
         def check_content_type_header
           return if request.headers[CONTENT_TYPE_HEADER].to_s.include?(JSON_API_MEDIA_TYPE)
 
-          raise Shared::Infrastructure::Errors::UnsupportedMediaTypeError.new(
+          raise SharedContext::Infrastructure::Errors::UnsupportedMediaTypeError.new(
             request.headers[CONTENT_TYPE_HEADER],
             CONTENT_TYPE_HEADER
           )

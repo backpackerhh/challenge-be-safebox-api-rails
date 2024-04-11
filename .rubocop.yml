@@ -30,21 +30,21 @@ Style/NegatedIf:
 Metrics/ParameterLists:
   Enabled: true
   Exclude:
-    - "contexts/shared/infrastructure/error.rb"
+    - "contexts/shared_context/infrastructure/error.rb"
 
 Metrics/MethodLength:
   Enabled: true
   CountAsOne: ["array", "hash", "heredoc", "method_call"]
   Exclude:
-    - "contexts/safeboxes/safeboxes/application/add_safebox_item_use_case.rb"
-    - "contexts/safeboxes/safeboxes/application/list_safebox_items_use_case.rb"
+    - "contexts/safeboxes_context/safeboxes/application/add_safebox_item_use_case.rb"
+    - "contexts/safeboxes_context/safeboxes/application/list_safebox_items_use_case.rb"
 
 Metrics/AbcSize:
   Enabled: true
   CountRepeatedAttributes: false
   Exclude:
-    - "contexts/safeboxes/safeboxes/application/add_safebox_item_use_case.rb"
-    - "contexts/safeboxes/safeboxes/application/list_safebox_items_use_case.rb"
+    - "contexts/safeboxes_context/safeboxes/application/add_safebox_item_use_case.rb"
+    - "contexts/safeboxes_context/safeboxes/application/list_safebox_items_use_case.rb"
     - "apps/safe_ish/safeboxes/api/v1/open_safebox_controller.rb"
 
 # Performance
@@ -52,7 +52,7 @@ Metrics/AbcSize:
 Performance/Sum:
   Enabled: true
   Exclude:
-    - "contexts/shared/infrastructure/collection_input.rb"
+    - "contexts/shared_context/infrastructure/collection_input.rb"
 
 # Rails
 

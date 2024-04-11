@@ -6,16 +6,16 @@ module SafeIsh
       module V1
         class ListSafeboxItemsController < ApplicationController
           def index
-            input = ::Safeboxes::Safeboxes::Infrastructure::ListSafeboxItemsInput.new(
+            input = SafeboxesContext::Safeboxes::Infrastructure::ListSafeboxItemsInput.new(
               query_params:,
               id: params[:id],
               token: extract_token_from_auth_header
             )
-            result = ::Safeboxes::Safeboxes::Application::ListSafeboxItemsUseCase.new.retrieve_all(input:)
+            result = SafeboxesContext::Safeboxes::Application::ListSafeboxItemsUseCase.new.retrieve_all(input:)
 
             result.on_success do |safebox_items, total_safebox_items|
               successful_response(
-                ::Safeboxes::Safeboxes::Infrastructure::SafeboxItemCollectionSerializer.new(
+                SafeboxesContext::Safeboxes::Infrastructure::SafeboxItemCollectionSerializer.new(
                   safebox_items,
                   is_collection: true,
                   links: build_links_for(params[:id], query_params, total_safebox_items)
@@ -32,7 +32,7 @@ module SafeIsh
           private
 
           def build_links_for(safebox_id, query_params, total_count)
-            ::Safeboxes::Safeboxes::Infrastructure::Links::ListSafeboxItemsCollectionLinks.build(
+            SafeboxesContext::Safeboxes::Infrastructure::Links::ListSafeboxItemsCollectionLinks.build(
               {
                 self_url: list_safebox_items_url(safebox_id),
                 add_item_url: add_safebox_item_url(safebox_id),

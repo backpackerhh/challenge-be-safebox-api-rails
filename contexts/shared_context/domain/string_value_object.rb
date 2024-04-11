@@ -1,0 +1,9 @@
+# frozen_string_literal: true
+
+module SharedContext
+  module Domain
+    class StringValueObject < ValueObject
+      value_type Types::Strict::String
+    end
+  end
+end
