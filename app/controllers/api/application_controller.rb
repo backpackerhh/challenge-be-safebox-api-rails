@@ -11,7 +11,7 @@ module Api
 
     before_action :check_accept_header
     before_action :check_content_type_header
-    after_action :set_content_type_header
+    around_action :set_content_type_header
 
     def body_params
       JSON.parse(request.body.read)
@@ -106,6 +106,8 @@ module Api
     end
 
     def set_content_type_header
+      yield
+    ensure
       response.set_header(CONTENT_TYPE_HEADER, JSON_API_MEDIA_TYPE)
     end
 
